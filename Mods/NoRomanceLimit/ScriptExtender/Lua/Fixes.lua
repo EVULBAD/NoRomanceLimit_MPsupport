@@ -1,6 +1,6 @@
-function FixAll()
+function FixAll(uuid)
     -- make everything consistent to flag values
-    ClearUnusedDatingFlags()
+    ClearUnusedDatingFlags(uuid)
     FixDoubleDating()
     FixPartneredDBAndFlags()
     ManageDatingEntry()
@@ -9,10 +9,10 @@ function FixAll()
     restoreStableRelationship()
 end
 
-function FixAfterFlagToggling()
+function FixAfterFlagToggling(uuid)
     FixDatingDB()
     FixPartneredDBAndFlags()
-    ClearUnusedDatingFlags()
+    ClearUnusedDatingFlags(uuid)
     ClearDumpDialogs()
 end
 
@@ -50,11 +50,11 @@ end
 -----------
 -- fixes during each flag toggle
 -----------
-function ClearUnusedDatingFlags()
-    StashPartneredStatus(true)
+function ClearUnusedDatingFlags(uuid)
+    StashPartneredStatus(true, uuid)
     for i, value in ipairs(origin_names) do
-        if GetFlag(partner_flags[i], getAvatar()) > 0 then
-            ClearFlag(date_flags[i], getAvatar())
+        if GetFlag(partner_flags[i], uuid) > 0 then
+            ClearFlag(date_flags[i], uuid)
             Osi.DB_ORI_WasDating:Delete(origin_uuids[i],nil)
             Osi.DB_ORI_WasDating:Delete(nil,origin_uuids[i])
         end

@@ -138,33 +138,35 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
     DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
-        StashPartneredStatus(true)
-        ClearPartnerships()
-        FixAfterFlagToggling()
+        StashPartneredStatus(true, getAvatar())
+        ClearPartnerships({}, getAvatar())
+        FixAfterFlagToggling(getAvatar())
     elseif dialog == halsinCompanionDialog then
-        StashPartneredStatus(true)
+        StashPartneredStatus(true, getAvatar())
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                StashPartneredStatus(true)
-                ClearPartnerships()
-                FixAfterFlagToggling()
+                StashPartneredStatus(true, getAvatar())
+                ClearPartnerships({}, getAvatar())
+                FixAfterFlagToggling(getAvatar())
                 break
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                StashPartneredStatus(true)
+                StashPartneredStatus(true, getAvatar())
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
-                StashPartneredStatus(true)
-                ClearPartnerships({eHalsin, value[2]})
-                ClearDatingExceptHalsin(value[2])
-                FixAfterFlagToggling()
-                break
+                -- for index, value in PlayerStash do
+                    StashPartneredStatus(true, getAvatar())
+                    ClearPartnerships({eHalsin, value[2]}, getAvatar())
+                    ClearDatingExceptHalsin(value[2], getAvatar())
+                    FixAfterFlagToggling(getAvatar())
+                    break
+                -- end
             end
         end
     end
@@ -177,47 +179,47 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
     end
     DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
 
-    MinthyFixNew() -- bug in se causes flags to be weird when set in dialog directly?
+    MinthyFixNew(getAvatar()) -- bug in se causes flags to be weird when set in dialog directly?
     FixPartneredDBAndFlags()
 
     if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
         RestorePartneredStatus()
-        FixAfterFlagToggling()
+        FixAfterFlagToggling(getAvatar())
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
         StashPartneredStatus(false)
     elseif dialog == halsinCompanionDialog then 
         RestorePartneredStatus(eHalsin)
-        FixAfterFlagToggling()
+        FixAfterFlagToggling(getAvatar())
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                RestorePartneredStatus(value[2])
-                RestoreDating(value[2])
-                FixAfterFlagToggling()
+                RestorePartneredStatus(value[2], getAvatar())
+                RestoreDating(value[2], getAvatar())
+                FixAfterFlagToggling(getAvatar())
                 break
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                RestorePartneredStatus(value[2])
-                FixAfterFlagToggling()
+                RestorePartneredStatus(value[2], getAvatar())
+                FixAfterFlagToggling(getAvatar())
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 DPrint(value[1])
-                RestorePartneredStatus(value[2])
-                RestoreDating(value[2])
-                FixAfterFlagToggling()
+                RestorePartneredStatus(value[2], getAvatar())
+                RestoreDating(value[2], getAvatar())
+                FixAfterFlagToggling(getAvatar())
                 DPrintAll()
                 break
             end
         end
     end
 
-    StashPartneredStatus(false)
+    StashPartneredStatus(false, getAvatar())
     
     
 end)
@@ -240,8 +242,8 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     end
 
     FixPersistentVars()
-    FixAll()
-    StashPartneredStatus(true)
+    FixAll(getAvatar())
+    StashPartneredStatus(true, getAvatar())
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 
     -- EVULBAD ADDITION
@@ -269,12 +271,12 @@ Ext.Osiris.RegisterListener("RequestEndTheDaySuccess", 0, "before", function ()
     RestorePartneredStatus()
     restoreStableRelationship()
     Fix_Databases() -- once per game
-    FixAll()
+    FixAll(getAvatar())
 end)
 
 -- Ext.Osiris.RegisterListener("LongRestStarted", 0, "before", function ()
 --     DPrint("LongRestStarted")
---     StashPartneredStatus(true)
+--     StashPartneredStatus(true, getAvatar())
 -- end)
 
 Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialogInstance)
