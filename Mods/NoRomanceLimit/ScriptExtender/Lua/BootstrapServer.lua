@@ -180,16 +180,16 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
     DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
 
     MinthyFixNew(getAvatar()) -- bug in se causes flags to be weird when set in dialog directly?
-    FixPartneredDBAndFlags()
+    FixPartneredDBAndFlags(getAvatar())
 
     if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
-        RestorePartneredStatus()
+        RestorePartneredStatus({}, getAvatar())
         FixAfterFlagToggling(getAvatar())
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
-        StashPartneredStatus(false)
+        StashPartneredStatus(false, getAvatar())
     elseif dialog == halsinCompanionDialog then 
-        RestorePartneredStatus(eHalsin)
+        RestorePartneredStatus(eHalsin, getAvatar())
         FixAfterFlagToggling(getAvatar())
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
@@ -247,17 +247,12 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 
     -- EVULBAD ADDITION
-    -- for loop that goes through squad and gives all players the NoRomanceLimitFolder spell.
+    -- for loop that goes through squad and gives all players the NoRomanceLimitFolder spell, as well as adds them to PlayerStash.
     local squad = GetSquad()
     for _, k in pairs(squad) do
         Osi.AddSpell(k, "NoRomanceLimitFolder", 1, 1)
-    end
-
-    -- for loop to add every playable character into PlayerStash.
-    for _, k in ipairs(squad) do
         PlayerStash[#PlayerStash + 1] = k
     end
-    -- EVULBAD ADDITION
 
     -- EVULBAD REMOVAL
     -- AddSpell(getAvatar(), "NoRomanceLimitFolder", 1, 1)
@@ -268,8 +263,8 @@ end)
 -- this is when you start long rest
 Ext.Osiris.RegisterListener("RequestEndTheDaySuccess", 0, "before", function () 
     DPrint("RequestEndTheDaySuccess")
-    RestorePartneredStatus()
-    restoreStableRelationship()
+    RestorePartneredStatus(getAvatar())
+    restoreStableRelationship(getAvatar())
     Fix_Databases() -- once per game
     FixAll(getAvatar())
 end)
@@ -287,10 +282,10 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
     DPrint(string.format("FlagSet %s %s %s", flag, speaker, dialogInstance))
 
     if flag == "ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040" then
-        MinthyFixNew()
+        MinthyFixNew(getAvatar())
     end
     if #Osi.DB_Avatars:Get(nil) > 0 then
-        FixPartneredDBAndFlags()
+        FixPartneredDBAndFlags(getAvatar())
     end
 end)
 -- Ext.Osiris.RegisterListener("FlagSet", 3, "before", function(flag, speaker, dialogInstance)
@@ -333,7 +328,7 @@ end)
 
 Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(object, timer)
     if timer == 'NoRomanceLimitEpilogFix' then
-        EpilogFix()
+        EpilogFix(getAvatar())
         print("Romance states restored to:")
         PrintAll()
     end

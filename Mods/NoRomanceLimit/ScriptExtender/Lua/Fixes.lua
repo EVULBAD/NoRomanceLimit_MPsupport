@@ -1,51 +1,50 @@
 function FixAll(uuid)
     -- make everything consistent to flag values
     ClearUnusedDatingFlags(uuid)
-    FixDoubleDating()
-    FixPartneredDBAndFlags()
+    FixDoubleDating(uuid)
+    FixPartneredDBAndFlags(uuid)
     ManageDatingEntry()
     ManageCanStartDatingEntry()
-    ClearDumpDialogs()
-    restoreStableRelationship()
+    ClearDumpDialogs(uuid)
+    restoreStableRelationship(uuid)
 end
 
 function FixAfterFlagToggling(uuid)
-    FixDatingDB()
-    FixPartneredDBAndFlags()
+    FixDatingDB(uuid)
+    FixPartneredDBAndFlags(uuid)
     ClearUnusedDatingFlags(uuid)
-    ClearDumpDialogs()
+    ClearDumpDialogs(uuid)
 end
 
-function FixDatingDB()
+function FixDatingDB(uuid)
     for index = eMinthara, eLaezel do
-        if GetFlag(date_flags[index], getAvatar()) ~= 0 then
+        if GetFlag(date_flags[index], uuid) ~= 0 then
             Osi.DB_ORI_Dating(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
             Osi.DB_ORI_WasDating:Delete(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
         end
     end
 end
 
-function FixPartneredDBAndFlags()
+function FixPartneredDBAndFlags(uuid)
     local isPartnered = false
     for index = eMinthara, eLaezel do
-        if GetFlag(partner_flags[index], getAvatar()) ~= 0 then
+        if GetFlag(partner_flags[index], uuid) ~= 0 then
             isPartnered = true
             Osi.DB_ORI_Partnered(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
-            Osi.ClearFlag(waspartner_flags[index], getAvatar())
+            Osi.ClearFlag(waspartner_flags[index], uuid)
         end
     end
-    local isPartneredHalsin = GetFlag(partner_flags[eHalsin], getAvatar()) > 0
+    local isPartneredHalsin = GetFlag(partner_flags[eHalsin], uuid) > 0
     if isPartnered or isPartneredHalsin then
-        Osi.SetFlag(isPartneredFlag, getAvatar())
-        restoreStableRelationship()
+        Osi.SetFlag(isPartneredFlag, uuid)
+        restoreStableRelationship(uuid)
         if isPartnered and isPartneredHalsin then
-            Osi.SetFlag("ORI_State_PartneredWithHalsinSecondary_6af0be74-d032-4a20-876a-11bab5f86db2", getAvatar())
+            Osi.SetFlag("ORI_State_PartneredWithHalsinSecondary_6af0be74-d032-4a20-876a-11bab5f86db2", uuid)
         end
     else
-        Osi.ClearFlag(isPartneredFlag, getAvatar())
+        Osi.ClearFlag(isPartneredFlag, uuid)
     end
 end
-
 
 -----------
 -- fixes during each flag toggle
@@ -60,29 +59,30 @@ function ClearUnusedDatingFlags(uuid)
         end
     end
 end
-function ClearDumpDialogs()
-    ClearFlag("ORI_State_ChosePartnerOverMinthara_25202f13-55d3-4d13-c2b0-45120da9f299", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverLaezel_35c95a6d-4145-4903-73ad-73a70edf9268", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverShadowheart_3928d3fc-b2c8-44ac-0d85-69e27f170a8c", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverAstarion_529d4115-ef78-49aa-f2b1-99244e4ee375", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverKarlach_8e5ba2d7-146c-4751-2aa6-d94b8f8e9e27", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverWyll_f0b08362-76b7-4cf9-01bd-4f87d8c11cbf", getAvatar())
-    ClearFlag("ORI_State_ChosePartnerOverGale_ff5cbe4e-d3a8-4cc6-fa86-36f35ef10443", getAvatar())
+function ClearDumpDialogs(uuid)
+    ClearFlag("ORI_State_ChosePartnerOverMinthara_25202f13-55d3-4d13-c2b0-45120da9f299", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverLaezel_35c95a6d-4145-4903-73ad-73a70edf9268", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverShadowheart_3928d3fc-b2c8-44ac-0d85-69e27f170a8c", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverAstarion_529d4115-ef78-49aa-f2b1-99244e4ee375", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverKarlach_8e5ba2d7-146c-4751-2aa6-d94b8f8e9e27", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverWyll_f0b08362-76b7-4cf9-01bd-4f87d8c11cbf", uuid)
+    ClearFlag("ORI_State_ChosePartnerOverGale_ff5cbe4e-d3a8-4cc6-fa86-36f35ef10443", uuid)
 end
 ------------------------------
 -- stable relationships
 ------------------------------
 
-function restoreStableRelationship()
+function restoreStableRelationship(uuid)
     if PersistentVars[10]  > 3 then
-        SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-c88a-8b743cbe9530", getAvatar())
-        SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-8ac8-748bbe3c3095", getAvatar())
+        SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-c88a-8b743cbe9530", uuid)
+        SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-8ac8-748bbe3c3095", uuid)
     end
 end
-function stableRelationshipAdvance()
+
+function stableRelationshipAdvance(uuid)
     DPrint(string.format(" stable rel @ %d => +1", PersistentVars[10]))
     -- seems isInRelationship is broken
-    if GetFlag(isPartneredFlag, getAvatar()) > 0 then
+    if GetFlag(isPartneredFlag, uuid) > 0 then
         PersistentVars[10] = PersistentVars[10]  + 1
     else
         PersistentVars[10] = 0
@@ -95,12 +95,12 @@ end
 -- database fixes
 --------------------------
 
-function FixDoubleDating()
+function FixDoubleDating(uuid)
     -- once per game
     for _, person in ipairs(origin_uuids) do 
         Osi.DB_ORI_FreeDating(person)
     end
-    Osi.ClearFlag("ORI_State_DoubleDating_41320aeb-8e1a-433d-a82e-3d78aff578da", getAvatar()) 
+    Osi.ClearFlag("ORI_State_DoubleDating_41320aeb-8e1a-433d-a82e-3d78aff578da", uuid) 
 end
 
 function Fix_Databases()
@@ -144,7 +144,7 @@ function FixRomNightFlagCheckForNight(night_uuid)
     end
 end
 
-function ShouldManageDatingEntry(entry)
+function ShouldManageDatingEntry(entry, uuid)
     night_uuid = entry[1]
     origin_uuid = entry[2]
 -- QRY
@@ -165,16 +165,16 @@ function ShouldManageDatingEntry(entry)
 -- DB_NOOP(1);
     if
         -- 1
-        isSublistInListOfLists({getAvatar(), origin_uuid}, Osi.DB_ORI_Dating:Get(nil,nil)) and
+        isSublistInListOfLists({uuid, origin_uuid}, Osi.DB_ORI_Dating:Get(nil,nil)) and
         -- 2
-        origin_uuid ~= getAvatar()
+        origin_uuid ~= uuid
     then
         return true
     end
     return false
 end
 
-function ShouldManageCanStartDatingEntry(entry)
+function ShouldManageCanStartDatingEntry(entry, uuid)
     night_uuid = entry[1]
     origin_uuid = entry[2]
 -- QRY
@@ -198,9 +198,9 @@ function ShouldManageCanStartDatingEntry(entry)
     if
         -- 0
         -- 2
-        origin_uuid ~= getAvatar() and
+        origin_uuid ~= uuid and
         -- 3
-        not isSublistInListOfLists({getAvatar(), origin_uuid}, Osi.DB_ORI_WasDating:Get(nil,nil))
+        not isSublistInListOfLists({uuid, origin_uuid}, Osi.DB_ORI_WasDating:Get(nil,nil))
     then
         return true
     end
@@ -220,21 +220,22 @@ relationEndedFlags = {
 "END_GameFinale_State_PartnershipEndedHalsin_887340d1-4dd3-4b99-81e6-2c942e61b06e"
 }
 
-function RestorePartneredEpilogFor(toon)
-    ClearFlag(relationEndedFlags[toon], getAvatar())
-    SetFlag(partner_flags[toon], getAvatar())
-end
-function EpilogClearedToonFlag(toon)
-    return GetFlag(partner_flags[toon], getAvatar()) == 0 and PersistentVars[toon] == true
+function RestorePartneredEpilogFor(toon, uuid)
+    ClearFlag(relationEndedFlags[toon], uuid)
+    SetFlag(partner_flags[toon], uuid)
 end
 
-function EpilogFix()
-    if GetFlag("ORI_DarkUrge_State_WasPartneredGoneMad_fb3ab877-e2c3-4887-8e27-7050dc1b5171", getAvatar()) > 0 then
+function EpilogClearedToonFlag(toon, uuid)
+    return GetFlag(partner_flags[toon], uuid) == 0 and PersistentVars[toon] == true
+end
+
+function EpilogFix(uuid)
+    if GetFlag("ORI_DarkUrge_State_WasPartneredGoneMad_fb3ab877-e2c3-4887-8e27-7050dc1b5171", uuid) > 0 then
         print("NoRomanceLimit: Mad DUrge - skipping romance patches")
         return
     end
     -- because it is weird.
-    if getAvatar() == origin_uuids[eGale] and GetFlag("ORI_Gale_State_IsGod_ec94f9a4-b032-ce25-f4eb-ecf4ed37d65d", getAvatar()) > 0 then
+    if uuid == origin_uuids[eGale] and GetFlag("ORI_Gale_State_IsGod_ec94f9a4-b032-ce25-f4eb-ecf4ed37d65d", uuid) > 0 then
         print("NoRomanceLimit: Gale god - skipping romance patches")
         return
     end
@@ -243,47 +244,47 @@ function EpilogFix()
     -- Karlach: romance is possible if  
     --  She went to the hells and you accompanied
     --  She did not go to the hells (is illithid)?
-    if EpilogClearedToonFlag(eKarlach) then
+    if EpilogClearedToonFlag(eKarlach, uuid) then
         if GetGloFlag("END_GameFinale_Event_KarlachReturnedToHell_bbec205a-5b1e-8488-f03a-10f0caaa5471") then
-            if getAvatar() == origin_uuids[eWyll] then
-                if GetFlag("ORI_Wyll_State_FollowKarlachToHells_e91a4ad5-e2f5-b336-f583-9f480ee7544e", getAvatar()) then
-                    RestorePartneredEpilogFor(eKarlach)
+            if uuid == origin_uuids[eWyll] then
+                if GetFlag("ORI_Wyll_State_FollowKarlachToHells_e91a4ad5-e2f5-b336-f583-9f480ee7544e", uuid) then
+                    RestorePartneredEpilogFor(eKarlach, uuid)
                 end
             end
-            if GetFlag("END_GameFinale_Event_AccompanyKarlachToHell_35150cbf-2c72-1049-37ed-14dbc3736135", getAvatar()) then
-                RestorePartneredEpilogFor(eKarlach)
+            if GetFlag("END_GameFinale_Event_AccompanyKarlachToHell_35150cbf-2c72-1049-37ed-14dbc3736135", uuid) then
+                RestorePartneredEpilogFor(eKarlach, uuid)
             end
         else
-            RestorePartneredEpilogFor(eKarlach)
+            RestorePartneredEpilogFor(eKarlach, uuid)
         end
     end
     -- gale: break up if is god
-    if EpilogClearedToonFlag(eGale) and GetFlag("ORI_Gale_State_IsGod_ec94f9a4-b032-ce25-f4eb-ecf4ed37d65d", getAvatar()) == 0 then
-        RestorePartneredEpilogFor(eGale)
+    if EpilogClearedToonFlag(eGale, uuid) and GetFlag("ORI_Gale_State_IsGod_ec94f9a4-b032-ce25-f4eb-ecf4ed37d65d", uuid) == 0 then
+        RestorePartneredEpilogFor(eGale, uuid)
     end
     -- laezel: break up if leaves Faerun
     -- leave faurun as laezel is ignored
-    if EpilogClearedToonFlag(eLaezel) and #Osi.DB_GlobalFlag:Get("END_GameFinale_State_LaezelLeavesFaerun_896fb62a-4f56-41d8-a173-7d06c4cb9209") == 0 then
-        RestorePartneredEpilogFor(eLaezel)
+    if EpilogClearedToonFlag(eLaezel, uuid) and #Osi.DB_GlobalFlag:Get("END_GameFinale_State_LaezelLeavesFaerun_896fb62a-4f56-41d8-a173-7d06c4cb9209") == 0 then
+        RestorePartneredEpilogFor(eLaezel, uuid)
     end
     -- Wyll: break up if wyll in avernus, and toon is not. 
-    if EpilogClearedToonFlag(eWyll) then
+    if EpilogClearedToonFlag(eWyll, uuid) then
         restore_wyll = false
         if not GetGloFlag("ORI_Wyll_State_FollowKarlachToHells_e91a4ad5-e2f5-b336-f583-9f480ee7544e") then
             restore_wyll = true
             ClearFlag()
-        elseif GetFlag("END_GameFinale_Event_AccompanyKarlachToHell_35150cbf-2c72-1049-37ed-14dbc3736135", getAvatar()) then
+        elseif GetFlag("END_GameFinale_Event_AccompanyKarlachToHell_35150cbf-2c72-1049-37ed-14dbc3736135", uuid) then
             restore_wyll = true
         end
-        if RestorePartneredEpilogFor(eWyll) then
-            RestorePartneredEpilogFor(eWyll)
+        if RestorePartneredEpilogFor(eWyll, uuid) then
+            RestorePartneredEpilogFor(eWyll, uuid)
         end
     end
 
     -- simple guys: if broke up then restore relationship.
     for _, toon in ipairs({eMinthara, eAstarion, eShadowHeart, eHalsin}) do
-        if EpilogClearedToonFlag(toon) then
-            RestorePartneredEpilogFor(toon)
+        if EpilogClearedToonFlag(toon, uuid) then
+            RestorePartneredEpilogFor(toon, uuid)
         end
     end
     FixAll()

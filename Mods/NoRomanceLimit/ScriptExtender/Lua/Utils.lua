@@ -113,6 +113,7 @@ function PrintAll()
         _D(PersistentVars)
     end
 end
+
 function FixPersistentVars()
     local refPVars = {false, false, false, false, false, false, false, false, false, 0, false, false} 
     if not PersistentVars or  #PersistentVars < #refPVars then
