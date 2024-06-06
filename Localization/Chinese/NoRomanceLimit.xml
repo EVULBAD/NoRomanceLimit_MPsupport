@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contentList>
+  <content contentuid="h4541bf8cg2b66g4e6aga082g2ac187cf0000" version="1">NoRomanceLimit: 约会</content>
+  <content contentuid="h80e32098ga8fcg4467gb17eg8d61373b66aa" version="1">用来和某个队友确立约会关系或者移除和他的约会关系.注意在第三章就不能约会了.</content>
+   <content contentuid="h1a3f3ed2g3082g495fga1d4g63a53527ffff" version="1">NoRomanceLimit: 正式关系</content>
+  <content contentuid="hd650fe84g5a07g46c2ga242ge0386753cccc" version="1">用来和某个队友确立正式关系或者移除和他的正式关系.</content>
+   <content contentuid="he2dab314gc9e1g47c3ga17eg850e4b5a3344" version="1">NoRomanceLimit: 邪念</content>
+  <content contentuid="h85e6979fg5579g49d2ga708g7848182bbbbb" version="1">修改邪念的特殊剧情中选择的人物.</content>
+   <content contentuid="h9d82f368g3c3eg47a2gb0d2g29b36c4a5777" version="1">NoRomanceLimit: 小型控制台</content>
+  <content contentuid="h6e547fb8g20e1g4bb2gb7b1gbd8275723888" version="1">一些也许可以用来拯救你的感情的法术集合。注意：本mod只适用于单人模式，多人模式中只适用于房主。这个里面的法术也只适用于房主。</content>
+   <content contentuid="haafc80beg0caeg4d34g94d3g991cc4dbc999" version="1">NoRomanceLimit: 显示</content>
+  <content contentuid="h88c908b8g0247g4ebagbaedg4119965f4414" version="1">显示你的情感状态.</content>
+  <content contentuid="ha7300ee0ge9eeg4637g9362g50ae33971676" version="1">NoRomanceLimit: Stash Player</content>
+  <content contentuid="hdbbfc18agc64fg4b9ag9e6cgc80ec8a26813" version="1">Stash the current character's UUID.</content>
+ 
+</contentList>

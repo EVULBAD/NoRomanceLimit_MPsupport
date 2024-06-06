@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contentList>
+  <content contentuid="h4541bf8cg2b66g4e6aga082g2ac187cf0000" version="1">NoRomanceLimit: Date</content>
+  <content contentuid="h80e32098ga8fcg4467gb17eg8d61373b66aa" version="1">Toggle the dating status of the selected companion.</content>
+   <content contentuid="h1a3f3ed2g3082g495fga1d4g63a53527ffff" version="1">NoRomanceLimit: Partner</content>
+  <content contentuid="hd650fe84g5a07g46c2ga242ge0386753cccc" version="1">Toggle the partnered status of the selected companion.</content>
+   <content contentuid="he2dab314gc9e1g47c3ga17eg850e4b5a3344" version="1">NoRomanceLimit: Dark Urge</content>
+  <content contentuid="h85e6979fg5579g49d2ga708g7848182bbbbb" version="1">Select the character used for the DUrge scene.</content>
+   <content contentuid="h9d82f368g3c3eg47a2gb0d2g29b36c4a5777" version="1">NoRomanceLimit: Helpers</content>
+  <content contentuid="h6e547fb8g20e1g4bb2gb7b1gbd8275723888" version="1">Helper functions should you get dumped. Note: This mod only works on single player and in multi player works only on the host.</content>
+   <content contentuid="haafc80beg0caeg4d34g94d3g991cc4dbc999" version="1">NoRomanceLimit: Print</content>
+  <content contentuid="h88c908b8g0247g4ebagbaedg4119965f4414" version="1">Show the romance status.</content>
+  <content contentuid="ha7300ee0ge9eeg4637g9362g50ae33971676" version="1">NoRomanceLimit: Stash Player</content>
+  <content contentuid="hdbbfc18agc64fg4b9ag9e6cgc80ec8a26813" version="1">Stash the current character's UUID.</content>
+
+</contentList>
