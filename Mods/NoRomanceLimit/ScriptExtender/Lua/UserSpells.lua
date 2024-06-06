@@ -31,9 +31,9 @@ function PrintAllSpell(caster)
     message = ""
     for i, val in ipairs(origin_names) do
         if GetFlag(partner_flags[i], caster) > 0then
-            message = message .. "Relationship (" .. caster .. "):" .. origin_names[i] .. "\n"
+            message = message .. "Relationship:" .. origin_names[i] .. "\n"
         elseif GetFlag(date_flags[i], caster) > 0 then
-            message = message .. "Dating (" .. caster .. "):" .. origin_names[i] .. "\n"
+            message = message .. "Dating:" .. origin_names[i] .. "\n"
         end
     end
     if string.len(message) == 0 then

@@ -138,35 +138,42 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
     DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
-        StashPartneredStatus(true, getAvatar())
-        ClearPartnerships({}, getAvatar())
-        FixAfterFlagToggling(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            StashPartneredStatus(true, uuid)
+            ClearPartnerships({}, uuid)
+            FixAfterFlagToggling(uuid)
+        end
     elseif dialog == halsinCompanionDialog then
-        StashPartneredStatus(true, getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            StashPartneredStatus(true, uuid)
+        end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                StashPartneredStatus(true, getAvatar())
-                ClearPartnerships({}, getAvatar())
-                FixAfterFlagToggling(getAvatar())
-                break
+                for index, uuid in ipairs(PlayerStash) do
+                    StashPartneredStatus(true, uuid)
+                    ClearPartnerships({}, uuid)
+                    FixAfterFlagToggling(uuid)
+                end
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                StashPartneredStatus(true, getAvatar())
+                for index, uuid in ipairs(PlayerStash) do
+                    StashPartneredStatus(true, uuid)
+                end
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
-                -- for index, value in PlayerStash do
-                    StashPartneredStatus(true, getAvatar())
-                    ClearPartnerships({eHalsin, value[2]}, getAvatar())
-                    ClearDatingExceptHalsin(value[2], getAvatar())
-                    FixAfterFlagToggling(getAvatar())
-                    break
-                -- end
+                for index, uuid in ipairs(PlayerStash) do
+                    StashPartneredStatus(true, uuid)
+                    ClearPartnerships({eHalsin, value[2]}, uuid)
+                    ClearDatingExceptHalsin(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                end
+                break
             end
         end
     end
@@ -179,49 +186,64 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
     end
     DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
 
-    MinthyFixNew(getAvatar()) -- bug in se causes flags to be weird when set in dialog directly?
-    FixPartneredDBAndFlags(getAvatar())
+    for index, uuid in ipairs(PlayerStash) do
+        MinthyFixNew(uuid) -- bug in se causes flags to be weird when set in dialog directly?
+        FixPartneredDBAndFlags(uuid)
+    end
 
     if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
-        RestorePartneredStatus({}, getAvatar())
-        FixAfterFlagToggling(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            RestorePartneredStatus({}, uuid)
+            FixAfterFlagToggling(uuid)
+        end
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
-        StashPartneredStatus(false, getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            StashPartneredStatus(false, uuid)
+        end
     elseif dialog == halsinCompanionDialog then 
-        RestorePartneredStatus(eHalsin, getAvatar())
-        FixAfterFlagToggling(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            RestorePartneredStatus(eHalsin, uuid)
+            FixAfterFlagToggling(uuid)
+        end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                RestorePartneredStatus(value[2], getAvatar())
-                RestoreDating(value[2], getAvatar())
-                FixAfterFlagToggling(getAvatar())
+                for index, uuid in ipairs(PlayerStash) do
+                    RestorePartneredStatus(value[2], uuid)
+                    RestoreDating(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                end
                 break
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                RestorePartneredStatus(value[2], getAvatar())
-                FixAfterFlagToggling(getAvatar())
+                for index, uuid in ipairs(PlayerStash) do
+                    RestorePartneredStatus(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                end
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 DPrint(value[1])
-                RestorePartneredStatus(value[2], getAvatar())
-                RestoreDating(value[2], getAvatar())
-                FixAfterFlagToggling(getAvatar())
+                for index, uuid in ipairs(PlayerStash) do
+                    RestorePartneredStatus(value[2], uuid)
+                    RestoreDating(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                end
                 DPrintAll()
                 break
             end
         end
     end
 
-    StashPartneredStatus(false, getAvatar())
-    
-    
+    for index, uuid in ipairs(PlayerStash) do
+        StashPartneredStatus(false, uuid)
+    end
+
 end)
 
 -- Ext.Osiris.RegisterListener("DialogStartRequested", 2, "before", function(target, player)
@@ -242,8 +264,10 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     end
 
     FixPersistentVars()
-    FixAll(getAvatar())
-    StashPartneredStatus(true, getAvatar())
+    for index, uuid in ipairs(PlayerStash) do
+        FixAll(uuid)
+        StashPartneredStatus(true, uuid)
+    end
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 
     -- EVULBAD ADDITION
@@ -263,10 +287,14 @@ end)
 -- this is when you start long rest
 Ext.Osiris.RegisterListener("RequestEndTheDaySuccess", 0, "before", function () 
     DPrint("RequestEndTheDaySuccess")
-    RestorePartneredStatus(getAvatar())
-    restoreStableRelationship(getAvatar())
+    for index, uuid in ipairs(PlayerStash) do
+        RestorePartneredStatus(uuid)
+        restoreStableRelationship(uuid)
+    end
     Fix_Databases() -- once per game
-    FixAll(getAvatar())
+    for index, uuid in ipairs(PlayerStash) do
+        FixAll(uuid)
+    end
 end)
 
 -- Ext.Osiris.RegisterListener("LongRestStarted", 0, "before", function ()
@@ -282,10 +310,14 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
     DPrint(string.format("FlagSet %s %s %s", flag, speaker, dialogInstance))
 
     if flag == "ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040" then
-        MinthyFixNew(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            MinthyFixNew(uuid)
+        end
     end
     if #Osi.DB_Avatars:Get(nil) > 0 then
-        FixPartneredDBAndFlags(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            FixPartneredDBAndFlags(uuid)
+        end
     end
 end)
 -- Ext.Osiris.RegisterListener("FlagSet", 3, "before", function(flag, speaker, dialogInstance)
@@ -316,7 +348,9 @@ end)
 Ext.Osiris.RegisterListener("PROC_END_GameFinale_StartEpilogue", 0, "after", function()
     print("Epilogue started. Romance states after original game logic")
     PrintAll()
-    Osi.RealtimeObjectTimerLaunch(getAvatar(), "NoRomanceLimitEpilogFix", 200)
+    for index, uuid in ipairs(PlayerStash) do
+        Osi.RealtimeObjectTimerLaunch(uuid, "NoRomanceLimitEpilogFix", 200)
+    end
 end)
 
 -- band aid for minthara, unbelievable I have to do this
@@ -328,7 +362,9 @@ end)
 
 Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(object, timer)
     if timer == 'NoRomanceLimitEpilogFix' then
-        EpilogFix(getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            EpilogFix(uuid)
+        end
         print("Romance states restored to:")
         PrintAll()
     end
@@ -342,7 +378,9 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
 
     if flag == "CAMP_Halsin_CRD_Romance_CheckWithExistingPartner_b523a2ba-8abf-4116-a5c1-636c77920ca3" then
         Osi.DB_CampNight_Requirement:Delete("NIGHT_Halsin_Romance_Execution_a9634ef4-27ec-4a75-be9d-7c738d9768ed", nil)
-        Osi.SetFlag(partner_flags[eHalsin], getAvatar())
+        for index, uuid in ipairs(PlayerStash) do
+            Osi.SetFlag(partner_flags[eHalsin], uuid)
+        end
     end
 
 end)
