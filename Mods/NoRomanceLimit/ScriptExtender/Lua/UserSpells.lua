@@ -108,11 +108,11 @@ function PartnerSpell(uuid, caster)
     end
     if Osi.GetFlag(partner_flags[companion], caster) > 0 then
         ClearFlag(partner_flags[companion], caster)
-        Osi.OpenMessageBox(caster"Partner status with "..uuid.."cleared.", getAvatar)
+        Osi.OpenMessageBox(caster, "Partner status with "..uuid.."cleared.")
         StashPartneredStatus(false)
     else
         SetFlag(partner_flags[companion], caster)
-        Osi.OpenMessageBox(caster,"Partner status with "..uuid.."set.")
+        Osi.OpenMessageBox(caster, "Partner status with "..uuid.."set.")
         StashPartneredStatus(true)
     end
 end

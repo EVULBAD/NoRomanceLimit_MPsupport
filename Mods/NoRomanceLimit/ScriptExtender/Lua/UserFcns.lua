@@ -51,10 +51,10 @@ function Date(name, state)
         return
     end
     if state then
-        SetFlag(date_flags[toon], getAvatar())
+        SetFlag(date_flags[toon], GetHostCharacter())
         PersistentVars[toon+10] = true
     else
-        ClearFlag(date_flags[toon], getAvatar())
+        ClearFlag(date_flags[toon], GetHostCharacter())
         PersistentVars[toon+10] = false
     end
     print("Done.")
@@ -69,10 +69,10 @@ function Partner(name, state)
         return
     end
     if state then
-        SetFlag(partner_flags[toon], getAvatar())
+        SetFlag(partner_flags[toon], GetHostCharacter())
         PersistentVars[toon] = true
     else
-        ClearFlag(partner_flags[toon], getAvatar())
+        ClearFlag(partner_flags[toon], GetHostCharacter())
         PersistentVars[toon] = false
     end
     print("Done.")
@@ -147,7 +147,7 @@ function CheckNight(name)
             local allSatisfied = true
             for _, flag in ipairs(flagset) do
                 local satisfied
-                if Osi.GetFlag(flag, getAvatar()) > 0 then
+                if Osi.GetFlag(flag, GetHostCharacter()) > 0 then
                     satisfied = '[O]'
                 else
                     satisfied = '[X]'
@@ -166,7 +166,7 @@ function CheckNight(name)
         local flagname = romanceNightEntry[1][4]
         if string.sub(flagname, 1, 4) ~= "NULL" then
             local satisfied
-            if Osi.GetFlag(flagname, getAvatar()) > 0 then
+            if Osi.GetFlag(flagname, GetHostCharacter()) > 0 then
                 satisfied = '[O]'
             else
                 satisfied = 'Not set!'
@@ -209,7 +209,7 @@ end
 -- this is the partner-with-minthara command in the console.
 function SetPartneredMinthara()
     StashPartneredStatus()
-    SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", getAvatar())
+    SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", GetHostCharacter())
     RestorePartneredStatus()
     restoreStableRelationship()
     FixAll()

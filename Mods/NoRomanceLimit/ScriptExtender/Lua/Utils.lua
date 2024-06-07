@@ -40,16 +40,19 @@ function isSublistInListOfLists(sublist,listOfLists, ignorelist)
     return false
 end
 
--- avatarName = nil
-function getAvatar()
+-- EVULBAD REMOVAL -- avatarName = nil
+-- this function isn't all that useful anymore now that i've going off of GetHostCharacter() and PlayerStash.
+-- function getAvatar()
+    -- EVULBAD REMOVAL
     -- if avatarName == nil then
         ---- by changing the  first [i] from [1] to [2], the avatar printed is the second avatar in the squadlist; in this case, chugg.
         -- avatarName = Osi.DB_Avatars:Get(nil)[1][1]
     -- end
+    -- EVULBAD REMOVAL
 
-    avatarName = GetHostCharacter()
-    return avatarName
-end
+--    avatarName = GetHostCharacter()
+--    return avatarName
+-- end
 
 -- EVULBAD ADDITION
 -- gets all playable characters.
@@ -107,9 +110,9 @@ end
 function PrintAll()
     for i, val in ipairs(origin_names) do
         print(string.format("%s: Date %s partner %s (stash Rela %s Date %s)", 
-        origin_names[i], GetFlag(date_flags[i], getAvatar()), GetFlag(partner_flags[i], getAvatar()), PersistentVars[i], PersistentVars[i+12]))
+        origin_names[i], GetFlag(date_flags[i], GetHostCharacter()), GetFlag(partner_flags[i], GetHostCharacter()), PersistentVars[i], PersistentVars[i+12]))
     end
-    print(string.format("partnered %s", GetFlag(isPartneredFlag, getAvatar())))
+    print(string.format("partnered %s", GetFlag(isPartneredFlag, GetHostCharacter())))
     if FullPrint then
         _D(PersistentVars)
     end
