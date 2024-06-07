@@ -17,12 +17,9 @@ Ext.Require("UserSpells.lua")
 -- this creates 14 tables to hold the flags for each playable character.
 Ext.Require("FlagStashes.lua")
 -- Dprint commands will print to console when FullPrint is true.
--- this prints out...a LOT of info!
--- don't forget to set to false if you end up getting anywhere worth sharing.
-FullPrint = true
+FullPrint = false
 
 flagStashList = {
-    {nil, table0},
     {nil, table1},
     {nil, table2},
     {nil, table3},
@@ -33,7 +30,8 @@ flagStashList = {
     {nil, table8},
     {nil, table9},
     {nil, table10},
-    {nil, table11}
+    {nil, table11},
+    {nil, table12}
 }
 
 -- EVULBAD EDIT
@@ -271,46 +269,69 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     -- EVULBAD ADDITION
     PlayerStash = GetSquad()
 
-    for index, uuid in pairs(PlayerStash) do
+    for index, uuid in ipairs(PlayerStash) do
+        print(index, uuid)
+        tableIndex = 1
         for i, val in ipairs(origin_names) do
-            if index == 0 then
-                flagStashList[0] = {uuid, table0}
-                table0[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
-            elseif index == 1 then
-                flagStashList[0] = {uuid, table1}
-                table1[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            if index == 1 then
+                print("index = 1. entering into table1.")
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
+                flagStashList[index] = {uuid, table1}
+
+                print(string.format("official date flag for %s: %s", val, dateFlag))
+                table1[#table1 + 1] = dateFlag
+                print(string.format("new date flag at index %s: %s", tableIndex, table1[tableIndex]))
+                print(string.format("official rela flag for %s: %s", val, relaFlag))
+                table1[#table1 + 1] = relaFlag
+                print(string.format("new rela flag at index %s: %s", tableIndex + 1, table1[tableIndex + 1]))
+
+                tableIndex = tableIndex + 1
             elseif index == 2 then
-                flagStashList[0] = {uuid, table2}
+                flagStashList[index] = {uuid, table2}
                 table2[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 3 then
-                flagStashList[0] = {uuid, table3}
+                flagStashList[index] = {uuid, table3}
                 table3[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 4 then
-                flagStashList[0] = {uuid, table4}
+                flagStashList[index] = {uuid, table4}
                 table4[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 5 then
-                flagStashList[0] = {uuid, table5}
+                flagStashList[index] = {uuid, table5}
                 table5[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 6 then
-                flagStashList[0] = {uuid, table6}
+                flagStashList[index] = {uuid, table6}
                 table6[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 7 then
-                flagStashList[0] = {uuid, table7}
+                flagStashList[index] = {uuid, table7}
                 table7[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 8 then
-                flagStashList[0] = {uuid, table8}
+                flagStashList[index] = {uuid, table8}
                 table8[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 9 then
-                flagStashList[0] = {uuid, table9}
+                flagStashList[index] = {uuid, table9}
                 table9[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 10 then
-                flagStashList[0] = {uuid, table10}
+                flagStashList[index] = {uuid, table10}
                 table10[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             elseif index == 11 then
-                flagStashList[0] = {uuid, table11}
+                flagStashList[index] = {uuid, table11}
+                table11[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 12 then
+                flagStashList[index] = {uuid, table11}
                 table11[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
             end
         end
+    end
+
+    -- TESTING
+    print(flagStashList[1][1],"'s flags are:")
+    for i, v in pairs(table1) do
+        if i > 16 then
+            return
+        end
+        print(string.format("%s: date %s, rela %s", i, v, table1[i+1]))
+        i = i + 1
     end
     -- EVULBAD ADDITION
 
@@ -448,4 +469,4 @@ end)
 
 print("NoRomanceLimit Mod V9.10 Loaded!")
 print("Please report unexpected behavior to EVULBAD since you are playing his edited version of this mod. :3\nnexusmods.com/baldursgate3/mods/1529?tab=posts is a good place to go if the bugs are a result of the base mod, though.")
-print("EVULBAD 932")
+print("EVULBAD 108")
