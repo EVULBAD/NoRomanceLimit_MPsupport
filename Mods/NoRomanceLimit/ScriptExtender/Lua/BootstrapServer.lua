@@ -13,11 +13,31 @@ Ext.Require("FlagsFcns.lua")
 Ext.Require("UserFcns.lua")
 Ext.Require("ScheduleN.lua")
 Ext.Require("UserSpells.lua")
+-- EVULBAD ADDITION
+-- this creates 14 tables to hold the flags for each playable character.
+Ext.Require("FlagStashes.lua")
 -- Dprint commands will print to console when FullPrint is true.
 -- this prints out...a LOT of info!
 -- don't forget to set to false if you end up getting anywhere worth sharing.
 FullPrint = true
 
+flagStashList = {
+    {nil, table0},
+    {nil, table1},
+    {nil, table2},
+    {nil, table3},
+    {nil, table4},
+    {nil, table5},
+    {nil, table6},
+    {nil, table7},
+    {nil, table8},
+    {nil, table9},
+    {nil, table10},
+    {nil, table11}
+}
+
+-- EVULBAD EDIT
+-- want to change name to ""
 PersistentVars = {false, false, false, false, false, 
                   false, false, false, -- toon relationship flag
                   true, -- 9 first time installation flag
@@ -27,7 +47,6 @@ PersistentVars = {false, false, false, false, false,
                   false, false, false, false, -- starting from 13
                   false, false, false, false, -- (new) dating flags
                   false, -- 21 brain defeated
-
                 }
 
 isPartneredFlag = "ORI_State_Partnered_6c1a31e8-1d3d-42a5-af4f-72ef7a798f74"
@@ -249,7 +268,51 @@ end)
 -- end)
 
 Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
+    -- EVULBAD ADDITION
     PlayerStash = GetSquad()
+
+    for index, uuid in pairs(PlayerStash) do
+        for i, val in ipairs(origin_names) do
+            if index == 0 then
+                flagStashList[0] = {uuid, table0}
+                table0[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 1 then
+                flagStashList[0] = {uuid, table1}
+                table1[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 2 then
+                flagStashList[0] = {uuid, table2}
+                table2[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 3 then
+                flagStashList[0] = {uuid, table3}
+                table3[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 4 then
+                flagStashList[0] = {uuid, table4}
+                table4[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 5 then
+                flagStashList[0] = {uuid, table5}
+                table5[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 6 then
+                flagStashList[0] = {uuid, table6}
+                table6[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 7 then
+                flagStashList[0] = {uuid, table7}
+                table7[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 8 then
+                flagStashList[0] = {uuid, table8}
+                table8[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 9 then
+                flagStashList[0] = {uuid, table9}
+                table9[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 10 then
+                flagStashList[0] = {uuid, table10}
+                table10[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            elseif index == 11 then
+                flagStashList[0] = {uuid, table11}
+                table11[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+            end
+        end
+    end
+    -- EVULBAD ADDITION
 
      -- upgrade patch
     for i = 1, 21 do
@@ -274,6 +337,7 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     for _, k in pairs(PlayerStash) do
         Osi.AddSpell(k, "NoRomanceLimitFolder", 1, 1)
     end
+    -- EVULBAD ADDITION
 
     -- EVULBAD REMOVAL
     -- AddSpell(getAvatar(), "NoRomanceLimitFolder", 1, 1)
@@ -383,5 +447,5 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
 end)
 
 print("NoRomanceLimit Mod V9.10 Loaded!")
-print("Please report unexpected behavior to nexusmods.com/baldursgate3/mods/1529?tab=posts")
-print("EVULBAD 1203")
+print("Please report unexpected behavior to EVULBAD since you are playing his edited version of this mod. :3\nnexusmods.com/baldursgate3/mods/1529?tab=posts is a good place to go if the bugs are a result of the base mod, though.")
+print("EVULBAD 932")
