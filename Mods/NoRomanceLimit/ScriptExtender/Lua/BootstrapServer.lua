@@ -30,9 +30,6 @@ PersistentVars = {false, false, false, false, false,
 
                 }
 
--- EVULBAD ADDITION
-PlayerStash = {}
-
 isPartneredFlag = "ORI_State_Partnered_6c1a31e8-1d3d-42a5-af4f-72ef7a798f74"
 
 listMainCompanionDialogEntry = {
@@ -252,9 +249,11 @@ end)
 -- end)
 
 Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
+    PlayerStash = GetSquad()
 
      -- upgrade patch
     for i = 1, 21 do
+        print(PersistentVars[i])
         if PersistentVars[i] == nil then
             PersistentVars[i] = false
         end
@@ -271,11 +270,9 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 
     -- EVULBAD ADDITION
-    -- for loop that goes through squad and gives all players the NoRomanceLimitFolder spell, as well as adds them to PlayerStash.
-    local squad = GetSquad()
-    for _, k in pairs(squad) do
+    -- for loop that goes through PlayerStash and gives all players the NoRomanceLimitFolder spell.
+    for _, k in pairs(PlayerStash) do
         Osi.AddSpell(k, "NoRomanceLimitFolder", 1, 1)
-        PlayerStash[#PlayerStash + 1] = k
     end
 
     -- EVULBAD REMOVAL

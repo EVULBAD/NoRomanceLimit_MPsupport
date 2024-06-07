@@ -46,6 +46,7 @@ function getAvatar()
         ---- by changing the  first [i] from [1] to [2], the avatar printed is the second avatar in the squadlist; in this case, chugg.
         -- avatarName = Osi.DB_Avatars:Get(nil)[1][1]
     -- end
+
     avatarName = GetHostCharacter()
     return avatarName
 end
@@ -75,9 +76,9 @@ function GetSquad()
     end
     
     -- TESTING
-    for k, v in pairs(squad) do
-        print(k .. " = " .. v)
-    end
+    -- for k, v in pairs(squad) do
+    --    print(k .. " = " .. v)
+    -- end
 
     return squad
 end
@@ -100,9 +101,9 @@ end
 function DPrintAll()
     if FullPrint then
         PrintAll()
-        
     end
 end
+
 function PrintAll()
     for i, val in ipairs(origin_names) do
         print(string.format("%s: Date %s partner %s (stash Rela %s Date %s)", 
