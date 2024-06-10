@@ -41,7 +41,7 @@ function isSublistInListOfLists(sublist,listOfLists, ignorelist)
 end
 
 -- EVULBAD REMOVAL -- avatarName = nil
--- this function isn't all that useful anymore now that i've going off of GetHostCharacter() and PlayerStash.
+-- this function isn't all that useful anymore now that i'm going off of GetHostCharacter() and PlayerStash.
 -- function getAvatar()
     -- EVULBAD REMOVAL
     -- if avatarName == nil then

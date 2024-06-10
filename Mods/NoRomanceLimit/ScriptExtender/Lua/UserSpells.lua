@@ -90,11 +90,11 @@ function DateSpell(uuid, caster)
     if Osi.GetFlag(date_flags[companion], caster) > 0 then
         ClearFlag(date_flags[companion], caster)
         Osi.OpenMessageBox(caster,"Dating status with "..uuid.."cleared.")
-        StashPartneredStatus(false)
+        StashPartneredStatus(false, caster)
     else
         SetFlag(date_flags[companion], caster)
         Osi.OpenMessageBox(caster,"Dating status with "..uuid.."set.")
-        StashPartneredStatus(true)
+        StashPartneredStatus(true, caster)
     end
 end
 
@@ -109,11 +109,11 @@ function PartnerSpell(uuid, caster)
     if Osi.GetFlag(partner_flags[companion], caster) > 0 then
         ClearFlag(partner_flags[companion], caster)
         Osi.OpenMessageBox(caster, "Partner status with "..uuid.."cleared.")
-        StashPartneredStatus(false)
+        StashPartneredStatus(false, caster)
     else
         SetFlag(partner_flags[companion], caster)
         Osi.OpenMessageBox(caster, "Partner status with "..uuid.."set.")
-        StashPartneredStatus(true)
+        StashPartneredStatus(true, caster)
     end
 end
 

@@ -13,12 +13,25 @@ Ext.Require("FlagsFcns.lua")
 Ext.Require("UserFcns.lua")
 Ext.Require("ScheduleN.lua")
 Ext.Require("UserSpells.lua")
--- EVULBAD ADDITION
--- this creates 14 tables to hold the flags for each playable character.
-Ext.Require("FlagStashes.lua")
 -- Dprint commands will print to console when FullPrint is true.
 FullPrint = false
 
+-- EVULBAD ADDITION
+-- these will hold the flags for each individual character.
+table1 = {}
+table2 = {}
+table3 = {}
+table4 = {}
+table5 = {}
+table6 = {}
+table7 = {}
+table8 = {}
+table9 = {}
+table10 = {}
+table11 = {}
+table12 = {}
+
+-- and this will hold the information regarding which character's flags are in which table. each "nil" will get replaced with a character's uuid.
 flagStashList = {
     {nil, table1},
     {nil, table2},
@@ -33,6 +46,7 @@ flagStashList = {
     {nil, table11},
     {nil, table12}
 }
+-- EVULBAD ADDITION
 
 -- EVULBAD EDIT
 -- want to change name to ""
@@ -274,64 +288,115 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
         tableIndex = 1
         for i, val in ipairs(origin_names) do
             if index == 1 then
-                print("index = 1. entering into table1.")
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table1}
 
-                print(string.format("official date flag for %s: %s", val, dateFlag))
-                table1[#table1 + 1] = dateFlag
-                print(string.format("new date flag at index %s: %s", tableIndex, table1[tableIndex]))
-                print(string.format("official rela flag for %s: %s", val, relaFlag))
-                table1[#table1 + 1] = relaFlag
-                print(string.format("new rela flag at index %s: %s", tableIndex + 1, table1[tableIndex + 1]))
+                table1[#table1 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table1[tableIndex][1], table1[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 2 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table2}
-                table2[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table2[#table2 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table2[tableIndex][1], table2[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 3 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table3}
-                table3[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table3[#table3 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table3[tableIndex][1], table3[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 4 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table4}
-                table4[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table4[#table4 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table4[tableIndex][1], table4[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 5 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table5}
-                table5[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table5[#table5 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table5[tableIndex][1], table5[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 6 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table6}
-                table6[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table6[#table6 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table6[tableIndex][1], table6[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 7 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table7}
-                table7[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table7[#table7 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table7[tableIndex][1], table7[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 8 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table8}
-                table8[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table8[#table8 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table8[tableIndex][1], table8[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 9 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table9}
-                table9[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table9[#table9 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table9[tableIndex][1], table9[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 10 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table10}
-                table10[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table10[#table10 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table10[tableIndex][1], table10[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 11 then
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
                 flagStashList[index] = {uuid, table11}
-                table11[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+
+                table11[#table11 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table11[tableIndex][1], table11[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             elseif index == 12 then
-                flagStashList[index] = {uuid, table11}
-                table11[i] = {GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)}
+                dateFlag = GetFlag(date_flags[i], uuid)
+                relaFlag = GetFlag(partner_flags[i], uuid)
+                flagStashList[index] = {uuid, table12}
+
+                table12[#table12 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, table12[tableIndex][1], table12[tableIndex][2]))
+
+                tableIndex = tableIndex + 1
             end
         end
-    end
-
-    -- TESTING
-    print(flagStashList[1][1],"'s flags are:")
-    for i, v in pairs(table1) do
-        if i > 16 then
-            return
-        end
-        print(string.format("%s: date %s, rela %s", i, v, table1[i+1]))
-        i = i + 1
     end
     -- EVULBAD ADDITION
 
@@ -467,6 +532,5 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
 
 end)
 
-print("NoRomanceLimit Mod V9.10 Loaded!")
+print("NoRomanceLimit Mod V9.10.EB loaded!")
 print("Please report unexpected behavior to EVULBAD since you are playing his edited version of this mod. :3\nnexusmods.com/baldursgate3/mods/1529?tab=posts is a good place to go if the bugs are a result of the base mod, though.")
-print("EVULBAD 108")
