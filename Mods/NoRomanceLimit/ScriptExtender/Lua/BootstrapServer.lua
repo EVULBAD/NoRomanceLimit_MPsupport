@@ -18,38 +18,38 @@ FullPrint = false
 
 -- EVULBAD ADDITION
 -- these will hold the flags for each individual character.
-table1 = {}
-table2 = {}
-table3 = {}
-table4 = {}
-table5 = {}
-table6 = {}
-table7 = {}
-table8 = {}
-table9 = {}
-table10 = {}
-table11 = {}
-table12 = {}
+flagStash1 = {}
+flagStash2 = {}
+flagStash3 = {}
+flagStash4 = {}
+flagStash5 = {}
+flagStash6 = {}
+flagStash7 = {}
+flagStash8 = {}
+flagStash9 = {}
+flagStash10 = {}
+flagStash11 = {}
+flagStash12 = {}
 
 -- and this will hold the information regarding which character's flags are in which table. each "nil" will get replaced with a character's uuid.
 flagStashList = {
-    {nil, table1},
-    {nil, table2},
-    {nil, table3},
-    {nil, table4},
-    {nil, table5},
-    {nil, table6},
-    {nil, table7},
-    {nil, table8},
-    {nil, table9},
-    {nil, table10},
-    {nil, table11},
-    {nil, table12}
+    {nil, flagStash1},
+    {nil, flagStash2},
+    {nil, flagStash3},
+    {nil, flagStash4},
+    {nil, flagStash5},
+    {nil, flagStash6},
+    {nil, flagStash7},
+    {nil, flagStash8},
+    {nil, flagStash9},
+    {nil, flagStash10},
+    {nil, flagStash11},
+    {nil, flagStash12}
 }
 -- EVULBAD ADDITION
 
 -- EVULBAD EDIT
--- want to change name to ""
+-- want to change name to "DefaultVars". might need to have a set for each character...
 PersistentVars = {false, false, false, false, false, 
                   false, false, false, -- toon relationship flag
                   true, -- 9 first time installation flag
@@ -159,6 +159,8 @@ dumpdate_flags = {
 }
 
 Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, instanceid)
+    currentPlayer = Osi.DialogGetInvolvedPlayer(instanceid, 2)
+    
     if PersistentVars[21] == true then
         return
     end
@@ -166,37 +168,47 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
     DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
-        for index, uuid in ipairs(PlayerStash) do
-            StashPartneredStatus(true, uuid)
+        -- for index, uuid in ipairs(PlayerStash) do
+            -- getting rid of StashPartneredStatus for now since it may be deprecated by my flagStashes.
+            -- StashPartneredStatus(true, uuid)
+            -- this line clears the partnerships. necessary!
+            print(GetFlagStash(uuid)[1][1])
             ClearPartnerships({}, uuid)
             FixAfterFlagToggling(uuid)
         end
+    --[[
+    -- i'm not sure this is necessary considering it just stashes the partnered status if the companion is halsin.
     elseif dialog == halsinCompanionDialog then
         for index, uuid in ipairs(PlayerStash) do
-            StashPartneredStatus(true, uuid)
+            -- StashPartneredStatus(true, uuid)
         end
+        ]]
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
                 for index, uuid in ipairs(PlayerStash) do
-                    StashPartneredStatus(true, uuid)
+                    GetFlagStash(uuid)
+                    -- StashPartneredStatus(true, uuid)
                     ClearPartnerships({}, uuid)
                     FixAfterFlagToggling(uuid)
                 end
             end
         end
+        --[[ 
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
                 for index, uuid in ipairs(PlayerStash) do
-                    StashPartneredStatus(true, uuid)
+                    -- StashPartneredStatus(true, uuid)
                 end
                 break
             end
         end
+        ]]
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 for index, uuid in ipairs(PlayerStash) do
-                    StashPartneredStatus(true, uuid)
+                    print(GetFlagStash(uuid)[1][1])
+                    -- StashPartneredStatus(true, uuid)
                     ClearPartnerships({eHalsin, value[2]}, uuid)
                     ClearDatingExceptHalsin(value[2], uuid)
                     FixAfterFlagToggling(uuid)
@@ -224,11 +236,13 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
             RestorePartneredStatus({}, uuid)
             FixAfterFlagToggling(uuid)
         end
+    --[[ 
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
         for index, uuid in ipairs(PlayerStash) do
-            StashPartneredStatus(false, uuid)
+            -- StashPartneredStatus(false, uuid)
         end
+    ]]
     elseif dialog == halsinCompanionDialog then 
         for index, uuid in ipairs(PlayerStash) do
             RestorePartneredStatus(eHalsin, uuid)
@@ -268,9 +282,11 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
         end
     end
 
+    --[[ 
     for index, uuid in ipairs(PlayerStash) do
-        StashPartneredStatus(false, uuid)
+        -- StashPartneredStatus(false, uuid)
     end
+    ]]
 
 end)
 
@@ -290,109 +306,109 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
             if index == 1 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table1}
+                flagStashList[index] = {uuid, flagStash1}
 
-                table1[#table1 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table1[tableIndex][1], table1[tableIndex][2]))
+                flagStash1[#flagStash1 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash1[tableIndex][1], flagStash1[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 2 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table2}
+                flagStashList[index] = {uuid, flagStash2}
 
-                table2[#table2 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table2[tableIndex][1], table2[tableIndex][2]))
+                flagStash2[#flagStash2 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash2[tableIndex][1], flagStash2[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 3 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table3}
+                flagStashList[index] = {uuid, flagStash3}
 
-                table3[#table3 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table3[tableIndex][1], table3[tableIndex][2]))
+                flagStash3[#flagStash3 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash3[tableIndex][1], flagStash3[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 4 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table4}
+                flagStashList[index] = {uuid, flagStash4}
 
-                table4[#table4 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table4[tableIndex][1], table4[tableIndex][2]))
+                flagStash4[#flagStash4 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash4[tableIndex][1], flagStash4[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 5 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table5}
+                flagStashList[index] = {uuid, flagStash5}
 
-                table5[#table5 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table5[tableIndex][1], table5[tableIndex][2]))
+                flagStash5[#flagStash5 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash5[tableIndex][1], flagStash5[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 6 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table6}
+                flagStashList[index] = {uuid, flagStash6}
 
-                table6[#table6 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table6[tableIndex][1], table6[tableIndex][2]))
+                flagStash6[#flagStash6 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash6[tableIndex][1], flagStash6[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 7 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table7}
+                flagStashList[index] = {uuid, flagStash7}
 
-                table7[#table7 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table7[tableIndex][1], table7[tableIndex][2]))
+                flagStash7[#flagStash7 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash7[tableIndex][1], flagStash7[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 8 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table8}
+                flagStashList[index] = {uuid, flagStash8}
 
-                table8[#table8 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table8[tableIndex][1], table8[tableIndex][2]))
+                flagStash8[#flagStash8 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash8[tableIndex][1], flagStash8[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 9 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table9}
+                flagStashList[index] = {uuid, flagStash9}
 
-                table9[#table9 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table9[tableIndex][1], table9[tableIndex][2]))
+                flagStash9[#flagStash9 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash9[tableIndex][1], flagStash9[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 10 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table10}
+                flagStashList[index] = {uuid, flagStash10}
 
-                table10[#table10 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table10[tableIndex][1], table10[tableIndex][2]))
+                flagStash10[#flagStash10 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash10[tableIndex][1], flagStash10[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 11 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table11}
+                flagStashList[index] = {uuid, flagStash11}
 
-                table11[#table11 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table11[tableIndex][1], table11[tableIndex][2]))
+                flagStash11[#flagStash11 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash11[tableIndex][1], flagStash11[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             elseif index == 12 then
                 dateFlag = GetFlag(date_flags[i], uuid)
                 relaFlag = GetFlag(partner_flags[i], uuid)
-                flagStashList[index] = {uuid, table12}
+                flagStashList[index] = {uuid, flagStash12}
 
-                table12[#table12 + 1] = {dateFlag, relaFlag}
-                print(string.format("%s: date %s, rela %s", val, table12[tableIndex][1], table12[tableIndex][2]))
+                flagStash12[#flagStash12 + 1] = {dateFlag, relaFlag}
+                print(string.format("%s: date %s, rela %s", val, flagStash12[tableIndex][1], flagStash12[tableIndex][2]))
 
                 tableIndex = tableIndex + 1
             end
@@ -402,7 +418,7 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
 
      -- upgrade patch
     for i = 1, 21 do
-        print(PersistentVars[i])
+        -- print(PersistentVars[i])
         if PersistentVars[i] == nil then
             PersistentVars[i] = false
         end
@@ -414,7 +430,7 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     FixPersistentVars()
     for index, uuid in ipairs(PlayerStash) do
         FixAll(uuid)
-        StashPartneredStatus(true, uuid)
+        -- StashPartneredStatus(true, uuid)
     end
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 

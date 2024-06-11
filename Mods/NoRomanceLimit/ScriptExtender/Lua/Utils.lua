@@ -120,7 +120,7 @@ end
 
 function FixPersistentVars()
     local refPVars = {false, false, false, false, false, false, false, false, false, 0, false, false} 
-    if not PersistentVars or  #PersistentVars < #refPVars then
+    if not PersistentVars or #PersistentVars < #refPVars then
         for i, value in ipairs(PersistentVars) do
             refPVars[i] = value
         end

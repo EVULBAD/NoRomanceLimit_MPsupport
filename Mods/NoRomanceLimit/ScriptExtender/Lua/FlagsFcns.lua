@@ -37,7 +37,7 @@ function MinthyFixNew(uuid)
         SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", uuid)
         PersistentVars[1] = true
         RestorePartneredStatus({}, uuid)
-        FixAfterFlagToggling()
+        FixAfterFlagToggling(uuid)
     end
 end
 
@@ -90,7 +90,7 @@ function StashPartneredStatus(keepUnsetFlags, uuid)
 end
 
 function RestorePartneredStatus(skip_enum, uuid)
-    DPrint(" StashPartneredStatus:")
+    DPrint("StashPartneredStatus:")
     DPrint(skip_enum)
     if skip_enum == nil then
         skip_enum = 9999

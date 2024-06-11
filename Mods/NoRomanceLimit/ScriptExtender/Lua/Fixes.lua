@@ -16,11 +16,41 @@ function FixAfterFlagToggling(uuid)
     ClearDumpDialogs(uuid)
 end
 
+function GetFlagStash(uuid)
+    for index, value in ipairs(flagStashList) do
+        if flagStashList[1][1] == uuid then
+            return flagStash1
+        elseif flagStashList[2][1] == uuid then
+            return flagStash2
+        elseif flagStashList[3][1] == uuid then
+            return flagStash3
+        elseif flagStashList[4][1] == uuid then
+            return flagStash4
+        elseif flagStashList[5][1] == uuid then
+            return flagStash5
+        elseif flagStashList[6][1] == uuid then
+            return flagStash6
+        elseif flagStashList[7][1] == uuid then
+            return flagStash7
+        elseif flagStashList[8][1] == uuid then
+            return flagStash8
+        elseif flagStashList[9][1] == uuid then
+            return flagStash9
+        elseif flagStashList[10][1] == uuid then
+            return flagStash10
+        elseif flagStashList[11][1] == uuid then
+            return flagStash11
+        elseif flagStashList[12][1] == uuid then
+            return flagStash12
+        end
+    end
+end
+
 function FixDatingDB(uuid)
     for index = eMinthara, eLaezel do
         if GetFlag(date_flags[index], uuid) ~= 0 then
-            Osi.DB_ORI_Dating(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
-            Osi.DB_ORI_WasDating:Delete(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
+            Osi.DB_ORI_Dating(uuid, origin_uuids[index])
+            Osi.DB_ORI_WasDating:Delete(uuid, origin_uuids[index])
         end
     end
 end
@@ -30,10 +60,11 @@ function FixPartneredDBAndFlags(uuid)
     for index = eMinthara, eLaezel do
         if GetFlag(partner_flags[index], uuid) ~= 0 then
             isPartnered = true
-            Osi.DB_ORI_Partnered(Osi.DB_Players:Get(nil)[1][1], origin_uuids[index])
+            Osi.DB_ORI_Partnered(uuid, origin_uuids[index])
             Osi.ClearFlag(waspartner_flags[index], uuid)
         end
     end
+    
     local isPartneredHalsin = GetFlag(partner_flags[eHalsin], uuid) > 0
     if isPartnered or isPartneredHalsin then
         Osi.SetFlag(isPartneredFlag, uuid)
@@ -50,7 +81,7 @@ end
 -- fixes during each flag toggle
 -----------
 function ClearUnusedDatingFlags(uuid)
-    StashPartneredStatus(true, uuid)
+    -- StashPartneredStatus(true, uuid)
     for i, value in ipairs(origin_names) do
         if GetFlag(partner_flags[i], uuid) > 0 then
             ClearFlag(date_flags[i], uuid)
@@ -69,12 +100,13 @@ function ClearDumpDialogs(uuid)
     ClearFlag("ORI_State_ChosePartnerOverWyll_f0b08362-76b7-4cf9-01bd-4f87d8c11cbf", uuid)
     ClearFlag("ORI_State_ChosePartnerOverGale_ff5cbe4e-d3a8-4cc6-fa86-36f35ef10443", uuid)
 end
+
 ------------------------------
 -- stable relationships
 ------------------------------
-
 function restoreStableRelationship(uuid)
-    if PersistentVars[10]  > 3 then
+    -- if character has more than 3 relationships, set these stable relationship flags. i'm not exactly sure what these are? but they seem important.
+    if PersistentVars[10] > 3 then
         SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-c88a-8b743cbe9530", uuid)
         SetFlag("ORI_State_StableRelationship_d904563d-2660-4b0c-8ac8-748bbe3c3095", uuid)
     end
@@ -89,8 +121,6 @@ function stableRelationshipAdvance(uuid)
         PersistentVars[10] = 0
     end
 end
-
-
 
 --------------------------
 -- database fixes
@@ -108,7 +138,6 @@ function Fix_Databases()
     -- Once Per Act
     ManageCanStartDatingEntry()
     ManageDatingEntry()
-
 end
 
 function ManageCanStartDatingEntry()
@@ -119,6 +148,7 @@ function ManageCanStartDatingEntry()
         end
     end
 end
+
 function ManageDatingEntry()
     for _, list in ipairs(Osi.DB_CampNight_Requirement_Dating:Get(nil,nil)) do
         if ShouldManageDatingEntry(list) then
@@ -207,8 +237,6 @@ function ShouldManageCanStartDatingEntry(entry, uuid)
     end
     return false
 end
-
-
 
 relationEndedFlags = {
 "END_GameFinale_State_PartnershipEndedMinthara_421d45a7-3c15-486a-b856-e3ea4a705882",
