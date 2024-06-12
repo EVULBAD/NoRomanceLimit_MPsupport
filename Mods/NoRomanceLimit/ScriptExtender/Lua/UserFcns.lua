@@ -40,7 +40,7 @@ function guessEnumFromInput(name)
 end
 
 -- this is the date command in the console.
-function Date(name, state)
+function Date(name, state, uuid)
     toon = guessEnumFromInput(name)
     if not toon then
         print("unknown input.")
@@ -51,11 +51,13 @@ function Date(name, state)
         return
     end
     if state then
-        SetFlag(date_flags[toon], GetHostCharacter())
-        PersistentVars[toon+10] = true
+        SetFlag(date_flags[toon], uuid)
+        GetFlagStash(uuid)[toon + 10][1] = 1
+        -- PersistentVars[toon+10] = true
     else
-        ClearFlag(date_flags[toon], GetHostCharacter())
-        PersistentVars[toon+10] = false
+        ClearFlag(date_flags[toon], uuid)
+        GetFlagStash(uuid)[toon + 10][1] = 0
+        -- PersistentVars[toon+10] = false
     end
     print("Done.")
     PrintAll()
@@ -69,11 +71,13 @@ function Partner(name, state)
         return
     end
     if state then
-        SetFlag(partner_flags[toon], GetHostCharacter())
-        PersistentVars[toon] = true
+        SetFlag(partner_flags[toon], uuid)
+        GetFlagStash(uuid)[toon][2] = 1
+        -- PersistentVars[toon] = true
     else
-        ClearFlag(partner_flags[toon], GetHostCharacter())
-        PersistentVars[toon] = false
+        ClearFlag(partner_flags[toon], uuid)
+        GetFlagStash(uuid)[toon][2] = 0
+        -- PersistentVars[toon] = false
     end
     print("Done.")
     PrintAll()
@@ -147,7 +151,7 @@ function CheckNight(name)
             local allSatisfied = true
             for _, flag in ipairs(flagset) do
                 local satisfied
-                if Osi.GetFlag(flag, GetHostCharacter()) > 0 then
+                if Osi.GetFlag(flag, uuid) > 0 then
                     satisfied = '[O]'
                 else
                     satisfied = '[X]'
@@ -166,7 +170,7 @@ function CheckNight(name)
         local flagname = romanceNightEntry[1][4]
         if string.sub(flagname, 1, 4) ~= "NULL" then
             local satisfied
-            if Osi.GetFlag(flagname, GetHostCharacter()) > 0 then
+            if Osi.GetFlag(flagname, uuid) > 0 then
                 satisfied = '[O]'
             else
                 satisfied = 'Not set!'
@@ -209,7 +213,7 @@ end
 -- this is the partner-with-minthara command in the console.
 function SetPartneredMinthara()
     StashPartneredStatus()
-    SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", GetHostCharacter())
+    SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", uuid)
     RestorePartneredStatus()
     restoreStableRelationship()
     FixAll()

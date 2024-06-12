@@ -21,7 +21,8 @@ end
 
 function RestoreDating (skip_enum, uuid)
     for i = eGale , eLaezel do -- no Minthy flag restore
-        if PersistentVars[i+12] == true and (skip_enum ~= i) and
+        -- PersistentVars[i + 12] == true
+        if GetFlagStash(uuid)[i + 12][1] == 1 and (skip_enum ~= i) and
             GetFlag(partner_flags[i], uuid) == 0 
         then
             SetFlag(date_flags[i], uuid)
@@ -35,7 +36,8 @@ function MinthyFixNew(uuid)
         print("NoRomanceLimit: Replacing Minthy Dating flag with Partnered flag.")
         ClearFlag("ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040", uuid)
         SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", uuid)
-        PersistentVars[1] = true
+        -- PersistentVars[1] = true
+        GetFlagStash(uuid)[eMinthara][2] = 1
         RestorePartneredStatus({}, uuid)
         FixAfterFlagToggling(uuid)
     end
@@ -48,6 +50,7 @@ function ClearPartnerships(exceptions, uuid)
     if exceptions == nil then
         exceptions = {}
     end
+    
     for i, flag in pairs(partner_flags) do
         if isInList(i, exceptions) then
             goto continue
@@ -66,24 +69,30 @@ function ClearPartnerships(exceptions, uuid)
     end
 end
 
--- new problem; stashed relationship flags. i have a feeling these will complicate things when dialogue gets suppressed.
+
 function StashPartneredStatus(keepUnsetFlags, uuid)
     DPrint(" StashPartnered(and dating)Status:")
+    
     if GetFlag(date_flags[eMinthara], uuid) > 0 then
-        PersistentVars[11] = true
+        GetFlagStash(uuid)[eMinthara][2] = 1
+        -- PersistentVars[11] = true
     end
     for index, partner_flag in ipairs(partner_flags) do
         if GetFlag(partner_flag, uuid) ~= 0 then
-            PersistentVars[index] = true
+            flagStash1[index][2] = 1
+            -- PersistentVars[index] = true
         elseif not keepUnsetFlags then
-            PersistentVars[index] = false
+            GetFlagStash(uuid)[index][2] = 0
+            -- PersistentVars[index] = false
         end
     end
     for index, date_flag in ipairs(date_flags) do
         if GetFlag(date_flag, uuid) ~= 0 then
-            PersistentVars[index+12] = true
+            GetFlagStash(uuid)[index][1] = 1
+            -- PersistentVars[index+12] = true
         elseif not keepUnsetFlags then
-            PersistentVars[index+12] = false
+            GetFlagStash(uuid)[index][1] = 0
+            -- PersistentVars[index+12] = false
         end    
         
     end
@@ -98,7 +107,8 @@ function RestorePartneredStatus(skip_enum, uuid)
     -- for index, stash_result in ipairs(PersistentVars) do
     for index = eMinthara, eHalsin do
         DPrint(index)
-        if --[[PersistentVars[index] and]] (skip_enum ~= index) and (GetFlag(partner_flags[index], uuid) == 0) then
+        -- PersistentVars[index]
+        if GetFlagStash(uuid)[index][2] == 1 and (skip_enum ~= index) and (GetFlag(partner_flags[index], uuid) == 0) then
             DPrint(string.format("NoRomanceLimit: Restoring stable relationship with %s", origin_names[index]))
             DTraceback()
             

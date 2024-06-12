@@ -26,10 +26,6 @@ flagStash5 = {}
 flagStash6 = {}
 flagStash7 = {}
 flagStash8 = {}
-flagStash9 = {}
-flagStash10 = {}
-flagStash11 = {}
-flagStash12 = {}
 
 -- and this will hold the information regarding which character's flags are in which table. each "nil" will get replaced with a character's uuid.
 flagStashList = {
@@ -40,11 +36,7 @@ flagStashList = {
     {nil, flagStash5},
     {nil, flagStash6},
     {nil, flagStash7},
-    {nil, flagStash8},
-    {nil, flagStash9},
-    {nil, flagStash10},
-    {nil, flagStash11},
-    {nil, flagStash12}
+    {nil, flagStash8}
 }
 
 -- these are non-playable characters. i'm presuming these don't get to be in relationships with origin companions in the same way.
@@ -53,8 +45,6 @@ IgnorePlayerList = {
 }
 -- EVULBAD ADDITION
 
--- EVULBAD EDIT
--- want to change name to "DefaultVars". might need to have a set for each character...
 PersistentVars = {false, false, false, false, false, 
                   false, false, false, -- toon relationship flag
                   true, -- 9 first time installation flag
@@ -174,43 +164,36 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
         -- for index, uuid in ipairs(PlayerStash) do
-            -- getting rid of StashPartneredStatus for now since it may be deprecated by my flagStashes.
-            -- StashPartneredStatus(true, uuid)
-            -- this line clears the partnerships. necessary!
+            StashPartneredStatus(true, uuid)
             ClearPartnerships({}, uuid)
             FixAfterFlagToggling(uuid)
         -- end
-    --[[
-    -- i'm not sure this is necessary considering it just stashes the partnered status if the companion is halsin.
     elseif dialog == halsinCompanionDialog then
-        for index, uuid in ipairs(PlayerStash) do
-            -- StashPartneredStatus(true, uuid)
-        end
-        ]]
+        -- for index, uuid in ipairs(PlayerStash) do
+            StashPartneredStatus(true, uuid)
+        -- end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
                 -- for index, uuid in ipairs(PlayerStash) do
-                    -- StashPartneredStatus(true, uuid)
+                    StashPartneredStatus(true, uuid)
                     ClearPartnerships({}, uuid)
                     FixAfterFlagToggling(uuid)
                 -- end
             end
         end
-        --[[ 
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                for index, uuid in ipairs(PlayerStash) do
-                    -- StashPartneredStatus(true, uuid)
-                end
+                -- for index, uuid in ipairs(PlayerStash) do
+                    StashPartneredStatus(true, uuid)
+                -- end
                 break
             end
         end
-        ]]
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 --for index, uuid in ipairs(PlayerStash) do
-                    -- StashPartneredStatus(true, uuid)
+                    StashPartneredStatus(true, uuid)
                     ClearPartnerships({eHalsin, value[2]}, uuid)
                     ClearDatingExceptHalsin(value[2], uuid)
                     FixAfterFlagToggling(uuid)
@@ -240,13 +223,11 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
             RestorePartneredStatus({}, uuid)
             FixAfterFlagToggling(uuid)
         -- end
-    --[[ 
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
         for index, uuid in ipairs(PlayerStash) do
-            -- StashPartneredStatus(false, uuid)
+            StashPartneredStatus(false, uuid)
         end
-    ]]
     elseif dialog == halsinCompanionDialog then 
         -- for index, uuid in ipairs(PlayerStash) do
             RestorePartneredStatus(eHalsin, uuid)
@@ -286,11 +267,9 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
         end
     end
 
-    --[[ 
-    for index, uuid in ipairs(PlayerStash) do
-        -- StashPartneredStatus(false, uuid)
-    end
-    ]]
+    -- for index, uuid in ipairs(PlayerStash) do
+        StashPartneredStatus(false, uuid)
+    -- end
 
 end)
 
@@ -389,42 +368,6 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
                     print(string.format("%s: date %s, rela %s", val, flagStash8[tableIndex][1], flagStash8[tableIndex][2]))
 
                     tableIndex = tableIndex + 1
-                elseif index == 9 then
-                    dateFlag = GetFlag(date_flags[i], uuid)
-                    relaFlag = GetFlag(partner_flags[i], uuid)
-                    flagStashList[index] = {uuid, flagStash9}
-
-                    flagStash9[#flagStash9 + 1] = {dateFlag, relaFlag}
-                    print(string.format("%s: date %s, rela %s", val, flagStash9[tableIndex][1], flagStash9[tableIndex][2]))
-
-                    tableIndex = tableIndex + 1
-                elseif index == 10 then
-                    dateFlag = GetFlag(date_flags[i], uuid)
-                    relaFlag = GetFlag(partner_flags[i], uuid)
-                    flagStashList[index] = {uuid, flagStash10}
-
-                    flagStash10[#flagStash10 + 1] = {dateFlag, relaFlag}
-                    print(string.format("%s: date %s, rela %s", val, flagStash10[tableIndex][1], flagStash10[tableIndex][2]))
-
-                    tableIndex = tableIndex + 1
-                elseif index == 11 then
-                    dateFlag = GetFlag(date_flags[i], uuid)
-                    relaFlag = GetFlag(partner_flags[i], uuid)
-                    flagStashList[index] = {uuid, flagStash11}
-
-                    flagStash11[#flagStash11 + 1] = {dateFlag, relaFlag}
-                    print(string.format("%s: date %s, rela %s", val, flagStash11[tableIndex][1], flagStash11[tableIndex][2]))
-
-                    tableIndex = tableIndex + 1
-                elseif index == 12 then
-                    dateFlag = GetFlag(date_flags[i], uuid)
-                    relaFlag = GetFlag(partner_flags[i], uuid)
-                    flagStashList[index] = {uuid, flagStash12}
-
-                    flagStash12[#flagStash12 + 1] = {dateFlag, relaFlag}
-                    print(string.format("%s: date %s, rela %s", val, flagStash12[tableIndex][1], flagStash12[tableIndex][2]))
-
-                    tableIndex = tableIndex + 1
                 end
             end
         end
@@ -446,7 +389,7 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     FixPersistentVars()
     for index, uuid in ipairs(PlayerStash) do
         FixAll(uuid)
-        -- StashPartneredStatus(true, uuid)
+        StashPartneredStatus(true, uuid)
     end
     Osi.DB_Dialogs_StartDatingDialog:Delete(nil)
 

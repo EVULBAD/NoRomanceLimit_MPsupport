@@ -34,14 +34,6 @@ function GetFlagStash(uuid)
             return flagStash7
         elseif flagStashList[8][1] == uuid then
             return flagStash8
-        elseif flagStashList[9][1] == uuid then
-            return flagStash9
-        elseif flagStashList[10][1] == uuid then
-            return flagStash10
-        elseif flagStashList[11][1] == uuid then
-            return flagStash11
-        elseif flagStashList[12][1] == uuid then
-            return flagStash12
         end
     end
 end
@@ -255,7 +247,8 @@ function RestorePartneredEpilogFor(toon, uuid)
 end
 
 function EpilogClearedToonFlag(toon, uuid)
-    return GetFlag(partner_flags[toon], uuid) == 0 and PersistentVars[toon] == true
+    -- PersistentVars[toon] == true 
+    return GetFlag(partner_flags[toon], uuid) == 0 and GetFlagStash(uuid)[toon][2] == 1
 end
 
 function EpilogFix(uuid)
