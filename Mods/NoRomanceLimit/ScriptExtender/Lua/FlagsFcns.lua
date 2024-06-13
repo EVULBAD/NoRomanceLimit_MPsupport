@@ -32,6 +32,7 @@ end
 
 function MinthyFixNew(uuid)
     if GetFlag("ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040", uuid) > 0 then
+        print("MINTHY FLAG STUFF")
         print("NoRomanceLimit: Replacing Minthy Dating flag with Partnered flag.")
         ClearFlag("ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040", uuid)
         SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", uuid)
@@ -68,7 +69,6 @@ function ClearPartnerships(exceptions, uuid)
     end
 end
 
-
 function StashPartneredStatus(keepUnsetFlags, uuid)
     DPrint(" StashPartnered(and dating)Status:")
     local stash = GetFlagStash(uuid)
@@ -79,7 +79,7 @@ function StashPartneredStatus(keepUnsetFlags, uuid)
     end
     for index, partner_flag in ipairs(partner_flags) do
         if GetFlag(partner_flag, uuid) ~= 0 then
-            stash[eMinthara][2] = 1
+            stash[index][2] = 1
             -- PersistentVars[index] = true
         elseif not keepUnsetFlags then
             stash[index][2] = 0

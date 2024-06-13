@@ -80,6 +80,32 @@ function GetSquad()
 
     return squad
 end
+
+-- for parsing a substring in GetPlayerInDialog.
+function escape_pattern(pattern)
+    return pattern:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
+end
+
+-- the "Osi.DialogGetInvolvedPlayer(instanceid, 2)" function returns the uuid without the part with the text player description. this remedies that.
+function GetPlayerInDialog(instanceid)
+    local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
+    local escapedSubstring = escape_pattern(substring)
+
+    for index, value in ipairs(PlayerStash) do
+        if string.find(value, escapedSubstring) ~= null then
+            return value
+        end
+    end
+end
+
+-- for retrieving flag stashes.
+function GetFlagStash(uuid)
+    for _, entry in ipairs(flagStashList) do
+        if entry[1] == uuid then
+            return entry[2]
+        end
+    end
+end
 -- EVULBAD ADDITION
 
 function mergeLists(list1, list2)

@@ -148,16 +148,8 @@ dumpdate_flags = {
 
 Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, instanceid)
     -- EVULBAD ADDITION
-    local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
-    local escapedSubstring = escape_pattern(substring)
-    local uuid
-
-    for index, value in ipairs(PlayerStash) do
-        if string.find(value, escapedSubstring) ~= null then
-            uuid = value
-        end
-    end
-    -- EVULBAD
+    local uuid = GetPlayerInDialog(instanceid, PlayerStash)
+    -- EVULBAD ADDITION
 
     if PersistentVars[21] == true then
         return
@@ -166,19 +158,17 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
     DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
-        -- for index, uuid in ipairs(PlayerStash) do
             StashPartneredStatus(true, uuid)
             ClearPartnerships({}, uuid)
             FixAfterFlagToggling(uuid)
         -- end
     elseif dialog == halsinCompanionDialog then
-        -- for index, uuid in ipairs(PlayerStash) do
             StashPartneredStatus(true, uuid)
         -- end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                -- for index, uuid in ipairs(PlayerStash) do
+    
                     StashPartneredStatus(true, uuid)
                     ClearPartnerships({}, uuid)
                     FixAfterFlagToggling(uuid)
@@ -187,7 +177,7 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                -- for index, uuid in ipairs(PlayerStash) do
+    
                     print(uuid, " line 185")
                     StashPartneredStatus(true, uuid)
                 -- end
@@ -211,80 +201,60 @@ end)
 
 Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instanceid)
     -- EVULBAD ADDITION
-    local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
-    local escapedSubstring = escape_pattern(substring)
-    local uuid
-
-    for index, value in ipairs(PlayerStash) do
-        if string.find(value, escapedSubstring) ~= null then
-            uuid = value
-        end
-    end
-    -- EVULBAD
+    local uuid = GetPlayerInDialog(instanceid, PlayerStash)
+    -- EVULBAD ADDITION
 
     if PersistentVars[21] == true then
         return
     end
 
     DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
-
-    -- for index, uuid in ipairs(PlayerStash) do
         MinthyFixNew(uuid) -- bug in se causes flags to be weird when set in dialog directly?
         FixPartneredDBAndFlags(uuid)
-    -- end
 
     if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
-        -- for index, uuid in ipairs(PlayerStash) do
             RestorePartneredStatus({}, uuid)
             FixAfterFlagToggling(uuid)
-        -- end
     elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
         -- Wyll breaks up with avatar is Duke is dead
         for index, uuid in ipairs(PlayerStash) do
             StashPartneredStatus(false, uuid)
         end
     elseif dialog == halsinCompanionDialog then 
-        -- for index, uuid in ipairs(PlayerStash) do
             RestorePartneredStatus(eHalsin, uuid)
             FixAfterFlagToggling(uuid)
-        -- end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-                -- for index, uuid in ipairs(PlayerStash) do
+    
                     RestorePartneredStatus(value[2], uuid)
                     RestoreDating(value[2], uuid)
                     FixAfterFlagToggling(uuid)
-                -- end
                 break
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-                -- for index, uuid in ipairs(PlayerStash) do
+    
                     RestorePartneredStatus(value[2], uuid)
                     FixAfterFlagToggling(uuid)
-                -- end
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 DPrint(value[1])
-                -- for index, uuid in ipairs(PlayerStash) do
+    
                     RestorePartneredStatus(value[2], uuid)
                     RestoreDating(value[2], uuid)
                     FixAfterFlagToggling(uuid)
-                -- end
                 DPrintAll()
                 break
             end
         end
     end
 
-    -- for index, uuid in ipairs(PlayerStash) do
-        StashPartneredStatus(false, uuid)
-    -- end
+    StashPartneredStatus(false, uuid)
 
 end)
 
@@ -489,9 +459,8 @@ end)
 Ext.Osiris.RegisterListener("PROC_END_GameFinale_StartEpilogue", 0, "after", function()
     print("Epilogue started. Romance states after original game logic")
     PrintAll()
-    for index, uuid in ipairs(PlayerStash) do
-        Osi.RealtimeObjectTimerLaunch(uuid, "NoRomanceLimitEpilogFix", 200)
-    end
+    
+    Osi.RealtimeObjectTimerLaunch(uuid, "NoRomanceLimitEpilogFix", 200)
 end)
 
 -- band aid for minthara, unbelievable I have to do this
