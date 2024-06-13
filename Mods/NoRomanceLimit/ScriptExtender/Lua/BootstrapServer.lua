@@ -147,9 +147,18 @@ dumpdate_flags = {
 }
 
 Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, instanceid)
-    uuid = Osi.DialogGetInvolvedPlayer(instanceid, 2)
-    print(uuid, " line 151")
-    
+    -- EVULBAD ADDITION
+    local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
+    local escapedSubstring = escape_pattern(substring)
+    local uuid
+
+    for index, value in ipairs(PlayerStash) do
+        if string.find(value, escapedSubstring) ~= null then
+            uuid = value
+        end
+    end
+    -- EVULBAD
+
     if PersistentVars[21] == true then
         return
     end
@@ -158,21 +167,18 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
 
     if isInList(dialog, listOfAllFirstSecondRomance) then
         -- for index, uuid in ipairs(PlayerStash) do
-            print(uuid, " line 161")
             StashPartneredStatus(true, uuid)
             ClearPartnerships({}, uuid)
             FixAfterFlagToggling(uuid)
         -- end
     elseif dialog == halsinCompanionDialog then
         -- for index, uuid in ipairs(PlayerStash) do
-            print(uuid, " line 168")
             StashPartneredStatus(true, uuid)
         -- end
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
                 -- for index, uuid in ipairs(PlayerStash) do
-                    print(uuid, " line 175")
                     StashPartneredStatus(true, uuid)
                     ClearPartnerships({}, uuid)
                     FixAfterFlagToggling(uuid)
@@ -191,7 +197,6 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 --for index, uuid in ipairs(PlayerStash) do
-                    print(uuid, " line 194")
                     StashPartneredStatus(true, uuid)
                     ClearPartnerships({eHalsin, value[2]}, uuid)
                     ClearDatingExceptHalsin(value[2], uuid)
@@ -205,11 +210,22 @@ Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, insta
 end)
 
 Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instanceid)
-    uuid = Osi.DialogGetInvolvedPlayer(instanceid, 2)
-    
+    -- EVULBAD ADDITION
+    local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
+    local escapedSubstring = escape_pattern(substring)
+    local uuid
+
+    for index, value in ipairs(PlayerStash) do
+        if string.find(value, escapedSubstring) ~= null then
+            uuid = value
+        end
+    end
+    -- EVULBAD
+
     if PersistentVars[21] == true then
         return
     end
+
     DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
 
     -- for index, uuid in ipairs(PlayerStash) do

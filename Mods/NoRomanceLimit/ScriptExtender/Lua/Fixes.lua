@@ -16,6 +16,10 @@ function FixAfterFlagToggling(uuid)
     ClearDumpDialogs(uuid)
 end
 
+function escape_pattern(pattern)
+    return pattern:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
+end
+
 function GetFlagStash(uuid)
     for _, entry in ipairs(flagStashList) do
         if entry[1] == uuid then

@@ -21,7 +21,7 @@ end
 function RestoreDating (skip_enum, uuid)
     for i = eGale , eLaezel do -- no Minthy flag restore
         -- PersistentVars[i + 12] == true
-        if GetFlagStash(uuid)[i + 12][1] == 1 and (skip_enum ~= i) and
+        if GetFlagStash(uuid)[i][1] == 1 and (skip_enum ~= i) and
             GetFlag(partner_flags[i], uuid) == 0 
         then
             SetFlag(date_flags[i], uuid)
@@ -74,7 +74,7 @@ function StashPartneredStatus(keepUnsetFlags, uuid)
     local stash = GetFlagStash(uuid)
 
     if GetFlag(date_flags[eMinthara], uuid) > 0 then
-        stash[eMinthara][2] = 1
+        GetFlagStash(uuid)[eMinthara][2] = 1
         -- PersistentVars[11] = true
     end
     for index, partner_flag in ipairs(partner_flags) do
