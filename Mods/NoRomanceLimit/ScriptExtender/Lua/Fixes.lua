@@ -287,5 +287,5 @@ function EpilogFix(uuid)
             RestorePartneredEpilogFor(toon, uuid)
         end
     end
-    FixAll()
+    FixAll(uuid)
 end

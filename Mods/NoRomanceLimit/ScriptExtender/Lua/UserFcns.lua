@@ -22,7 +22,6 @@ durgeLUT = {
     ""
 }
 
--- this is what happens when you misspell a name while playing with flags in the console.
 function guessEnumFromInput(name)
     name = string.lower(name)
     for k, v in pairs(userLUT) do
@@ -39,7 +38,6 @@ function guessEnumFromInput(name)
     return nil
 end
 
--- this is the date command in the console.
 function Date(name, state, uuid)
     toon = guessEnumFromInput(name)
     if not toon then
@@ -63,8 +61,7 @@ function Date(name, state, uuid)
     PrintAll()
 end
 
--- this is the partner command in the console.
-function Partner(name, state)
+function Partner(name, state, uuid)
     toon = guessEnumFromInput(name)
     if not toon then
         print("unknown input.")
@@ -83,7 +80,6 @@ function Partner(name, state)
     PrintAll()
 end
 
--- this is, i assume, a console command equivalent of the durge spell.
 function SetDUrgeParticipant(name)
     toon = guessEnumFromInput(name)
     if not toon then
@@ -101,7 +97,6 @@ function SetDUrgeParticipant(name)
     end
 end
 
--- this changes the night that occurs.
 function CheckNight(name)
     if string.sub(name, 1, 5) ~= "NIGHT" then
         print("Warning: The name of the night should start with NIGHT.")
@@ -191,7 +186,6 @@ function CheckNight(name)
     end
 end
 
--- not sure what this does. filter flagsets...?
 function filterFlagSet(name, flagsets)
     local results = {}
     for _, value in ipairs(flagsets) do
@@ -210,17 +204,15 @@ function filterFlagSet(name, flagsets)
     return results
 end
 
--- this is the partner-with-minthara command in the console.
-function SetPartneredMinthara()
-    StashPartneredStatus()
+function SetPartneredMinthara(uuid)
+    StashPartneredStatus(true, uuid)
     SetFlag("ORI_State_PartneredWithMinthara_39ac48fa-b440-47e6-a436-6dc9b10058d8", uuid)
-    RestorePartneredStatus()
-    restoreStableRelationship()
-    FixAll()
+    RestorePartneredStatus({}, uuid)
+    restoreStableRelationship({}, uuid)
+    FixAll(uuid)
     PrintAll()
 end
 
--- this is the date-with-minthara command in the console. it appears to not to anything aside from tell the user to not do it.
 function SetDatingMinthara()
     print("Do not set dating minthara flag, this flag is evil!")
 end

@@ -40,7 +40,8 @@ function isSublistInListOfLists(sublist,listOfLists, ignorelist)
     return false
 end
 
--- EVULBAD REMOVAL -- avatarName = nil
+-- EVULBAD REMOVAL
+-- avatarName = nil
 -- this function isn't all that useful anymore now that i'm going off of GetHostCharacter() and PlayerStash.
 -- function getAvatar()
     -- EVULBAD REMOVAL
@@ -129,13 +130,28 @@ function DPrintAll()
 end
 
 function PrintAll()
-    for i, val in ipairs(origin_names) do
-        print(string.format("%s: Date %s partner %s (stash Rela %s Date %s)", 
-        origin_names[i], GetFlag(date_flags[i], GetHostCharacter()), GetFlag(partner_flags[i], GetHostCharacter()), PersistentVars[i], PersistentVars[i+12]))
-    end
-    print(string.format("partnered %s", GetFlag(isPartneredFlag, GetHostCharacter())))
-    if FullPrint then
-        _D(PersistentVars)
+    for index, uuid in ipairs(PlayerStash) do
+        print(index, uuid)
+        playerIgnore = false
+
+        for index, value in ipairs(IgnorePlayerList) do
+            if value == uuid then
+                playerIgnore = true
+            end
+        end
+
+        if playerIgnore then
+            print("player in ignore list. skipping")
+        else
+            for i, val in ipairs(origin_names) do
+                print(string.format("%s: date %s, rela %s", 
+                origin_names[i], GetFlag(date_flags[i], uuid), GetFlag(partner_flags[i], uuid)))
+            end
+            print(string.format("partnered %s", GetFlag(isPartneredFlag, uuid)))
+            if FullPrint then
+                _D(PersistentVars)
+            end
+        end
     end
 end
 

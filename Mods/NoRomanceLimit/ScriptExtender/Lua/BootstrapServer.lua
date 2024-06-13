@@ -226,28 +226,25 @@ Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instance
     else
         for _, value in ipairs(listOfAllFirstSecondRomance) do
             if value[1] == dialog then
-    
-                    RestorePartneredStatus(value[2], uuid)
-                    RestoreDating(value[2], uuid)
-                    FixAfterFlagToggling(uuid)
+                RestorePartneredStatus(value[2], uuid)
+                RestoreDating(value[2], uuid)
+                FixAfterFlagToggling(uuid)
                 break
             end
         end
         for _, value in ipairs(listOfAllThirdRomance) do
             if value[1] == dialog then
-    
-                    RestorePartneredStatus(value[2], uuid)
-                    FixAfterFlagToggling(uuid)
+                RestorePartneredStatus(value[2], uuid)
+                FixAfterFlagToggling(uuid)
                 break
             end
         end
         for _, value in ipairs(listMainCompanionDialogEntry) do
             if value[1] == dialog then
                 DPrint(value[1])
-    
-                    RestorePartneredStatus(value[2], uuid)
-                    RestoreDating(value[2], uuid)
-                    FixAfterFlagToggling(uuid)
+                RestorePartneredStatus(value[2], uuid)
+                RestoreDating(value[2], uuid)
+                FixAfterFlagToggling(uuid)
                 DPrintAll()
                 break
             end
@@ -399,7 +396,7 @@ end)
 Ext.Osiris.RegisterListener("RequestEndTheDaySuccess", 0, "before", function () 
     DPrint("RequestEndTheDaySuccess")
     for index, uuid in ipairs(PlayerStash) do
-        RestorePartneredStatus(uuid)
+        RestorePartneredStatus({}, uuid)
         restoreStableRelationship(uuid)
     end
     Fix_Databases() -- once per game

@@ -1,4 +1,3 @@
--- EVULBAD ADDITION
 function StashPlayerSpell(caster)
     message = ""
     ignore = false
@@ -26,7 +25,6 @@ function StashPlayerSpell(caster)
     Osi.OpenMessageBox(caster, message)
 end
 
--- this function describes the "print" spell available in the action bar which prints the current romance statuses of companions.
 function PrintAllSpell(caster)
     message = ""
     for i, val in ipairs(origin_names) do
@@ -43,7 +41,6 @@ function PrintAllSpell(caster)
     end
 end
 
--- this looks like a way to convert uuids into the data type required (enum) to allow events.
 function getCompanionEnum(uuid)
     for i, val in ipairs(origin_uuids) do
         if uuid == val then
@@ -53,7 +50,6 @@ function getCompanionEnum(uuid)
     return -1
 end
 
--- this function describes the "durge" spell available in the action bar. i have no idea what this does and i'm scared to use it (spoilers maybe)!
 function DurgeSpell(uuid, caster)
     if uuid == "S_Player_Gale_ad9af97d-75da-406a-ae13-7071c563f604" then
         SetDUrgeParticipant('gale')
@@ -74,7 +70,6 @@ function DurgeSpell(uuid, caster)
     Osi.OpenMessageBox(caster, "Done.")
 end
 
--- this function describes the "date" spell available in the action bar which allows the caster to set the date flags on whatever character they cast it towards.
 function DateSpell(uuid, caster)
     -- check companion
     companion = getCompanionEnum(uuid)
@@ -98,7 +93,6 @@ function DateSpell(uuid, caster)
     end
 end
 
--- this function describes the "partner" spell available in the action bar which allows the caster to set the partner flags on whatever character they cast it towards.
 function PartnerSpell(uuid, caster)
     -- check companion
     companion = getCompanionEnum(uuid)
@@ -117,7 +111,6 @@ function PartnerSpell(uuid, caster)
     end
 end
 
--- these are listeners that listen for when a spell is cast.
 function AddUserSpellListeners ()
     Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function (caster, target, spell, spellType, spellElement, storyActionID)
         if spell == "NoRomanceLimitDate" then
