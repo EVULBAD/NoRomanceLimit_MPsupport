@@ -17,23 +17,9 @@ function FixAfterFlagToggling(uuid)
 end
 
 function GetFlagStash(uuid)
-    for index, value in ipairs(flagStashList) do
-        if flagStashList[1][1] == uuid then
-            return flagStash1
-        elseif flagStashList[2][1] == uuid then
-            return flagStash2
-        elseif flagStashList[3][1] == uuid then
-            return flagStash3
-        elseif flagStashList[4][1] == uuid then
-            return flagStash4
-        elseif flagStashList[5][1] == uuid then
-            return flagStash5
-        elseif flagStashList[6][1] == uuid then
-            return flagStash6
-        elseif flagStashList[7][1] == uuid then
-            return flagStash7
-        elseif flagStashList[8][1] == uuid then
-            return flagStash8
+    for _, entry in ipairs(flagStashList) do
+        if entry[1] == uuid then
+            return entry[2]
         end
     end
 end

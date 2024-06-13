@@ -2,7 +2,6 @@ function ClearDatingExceptHalsin (skip_enum, uuid)
     for i = eMinthara , eLaezel do
         if  (skip_enum ~= i) then
             ClearFlag(date_flags[i], uuid)
-    
         end
     end
     -- clear dumping ppl dialogs
@@ -72,26 +71,27 @@ end
 
 function StashPartneredStatus(keepUnsetFlags, uuid)
     DPrint(" StashPartnered(and dating)Status:")
-    
+    local stash = GetFlagStash(uuid)
+
     if GetFlag(date_flags[eMinthara], uuid) > 0 then
-        GetFlagStash(uuid)[eMinthara][2] = 1
+        stash[eMinthara][2] = 1
         -- PersistentVars[11] = true
     end
     for index, partner_flag in ipairs(partner_flags) do
         if GetFlag(partner_flag, uuid) ~= 0 then
-            flagStash1[index][2] = 1
+            stash[eMinthara][2] = 1
             -- PersistentVars[index] = true
         elseif not keepUnsetFlags then
-            GetFlagStash(uuid)[index][2] = 0
+            stash[index][2] = 0
             -- PersistentVars[index] = false
         end
     end
     for index, date_flag in ipairs(date_flags) do
         if GetFlag(date_flag, uuid) ~= 0 then
-            GetFlagStash(uuid)[index][1] = 1
+            stash[index][1] = 1
             -- PersistentVars[index+12] = true
         elseif not keepUnsetFlags then
-            GetFlagStash(uuid)[index][1] = 0
+            stash[index][1] = 0
             -- PersistentVars[index+12] = false
         end    
         
@@ -101,6 +101,8 @@ end
 function RestorePartneredStatus(skip_enum, uuid)
     DPrint("StashPartneredStatus:")
     DPrint(skip_enum)
+    local stash = GetFlagStash(uuid)
+
     if skip_enum == nil then
         skip_enum = 9999
     end
@@ -108,7 +110,7 @@ function RestorePartneredStatus(skip_enum, uuid)
     for index = eMinthara, eHalsin do
         DPrint(index)
         -- PersistentVars[index]
-        if GetFlagStash(uuid)[index][2] == 1 and (skip_enum ~= index) and (GetFlag(partner_flags[index], uuid) == 0) then
+        if stash[index][2] == 1 and (skip_enum ~= index) and (GetFlag(partner_flags[index], uuid) == 0) then
             DPrint(string.format("NoRomanceLimit: Restoring stable relationship with %s", origin_names[index]))
             DTraceback()
             

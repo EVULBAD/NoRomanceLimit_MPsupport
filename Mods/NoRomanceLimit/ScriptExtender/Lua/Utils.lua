@@ -77,11 +77,6 @@ function GetSquad()
             i = i + 1
         end
     end
-    
-    -- TESTING
-    -- for k, v in pairs(squad) do
-    --    print(k .. " = " .. v)
-    -- end
 
     return squad
 end
