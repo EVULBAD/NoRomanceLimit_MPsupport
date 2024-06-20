@@ -97,7 +97,7 @@ function SetDUrgeParticipant(name)
     end
 end
 
-function CheckNight(name)
+function CheckNight(name, uuid)
     if string.sub(name, 1, 5) ~= "NIGHT" then
         print("Warning: The name of the night should start with NIGHT.")
     end
@@ -113,8 +113,6 @@ function CheckNight(name)
         return
     end
 
-
-    
     local allowedSites = ""
     for _, value in ipairs(Osi.DB_CampNight_Camp:Get(nil,nil)) do
         if value[1] == name then

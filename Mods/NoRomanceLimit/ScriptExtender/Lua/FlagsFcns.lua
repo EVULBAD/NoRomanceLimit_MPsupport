@@ -106,9 +106,11 @@ function RestorePartneredStatus(skip_enum, uuid)
     if skip_enum == nil then
         skip_enum = 9999
     end
+
     -- for index, stash_result in ipairs(PersistentVars) do
     for index = eMinthara, eHalsin do
         DPrint(index)
+
         -- PersistentVars[index]
         if stash[index][2] == 1 and (skip_enum ~= index) and (GetFlag(partner_flags[index], uuid) == 0) then
             DPrint(string.format("NoRomanceLimit: Restoring stable relationship with %s", origin_names[index]))

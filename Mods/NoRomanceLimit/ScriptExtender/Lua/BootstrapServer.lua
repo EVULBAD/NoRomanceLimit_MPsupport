@@ -17,7 +17,7 @@ Ext.Require("UserSpells.lua")
 FullPrint = false
 
 -- EVULBAD ADDITION
--- these will hold the flags for each individual character.
+-- these will hold the flags for each individual playable character.
 flagStash1 = {}
 flagStash2 = {}
 flagStash3 = {}
@@ -60,6 +60,7 @@ listMainCompanionDialogEntry = {
     {"ShadowHeart_InParty_95ca3833-09d0-5772-b16a-c7a5e9208fe5",eShadowHeart},
     {"Laezel_InParty2_93bf58f5-5111-9730-1ee2-62dfb0b00c96",eLaezel}
 }
+
 halsinCompanionDialog = 'CAMP_Halsin2_c0ab0f6f-3ffc-d06d-0d6d-d1aaef70dfe4'
 
 listOfAllFirstSecondRomance = {
@@ -148,110 +149,111 @@ dumpdate_flags = {
 
 Ext.Osiris.RegisterListener("DialogStarted", 2, "before", function(dialog, instanceid)
     -- EVULBAD ADDITION
-    local uuid = GetPlayerInDialog(instanceid, PlayerStash)
+    local uuid = GetPlayerInDialog(instanceid)
     -- EVULBAD ADDITION
+    local playerIgnore = IsIgnoredPlayer(uuid)
 
-    if PersistentVars[21] == true then
-        return
-    end
-
-    DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
-
-    if isInList(dialog, listOfAllFirstSecondRomance) then
-            StashPartneredStatus(true, uuid)
-            ClearPartnerships({}, uuid)
-            FixAfterFlagToggling(uuid)
-        -- end
-    elseif dialog == halsinCompanionDialog then
-            StashPartneredStatus(true, uuid)
-        -- end
+    if playerIgnore then
+        DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
     else
-        for _, value in ipairs(listOfAllFirstSecondRomance) do
-            if value[1] == dialog then
-    
-                    StashPartneredStatus(true, uuid)
-                    ClearPartnerships({}, uuid)
-                    FixAfterFlagToggling(uuid)
-                -- end
-            end
+        if PersistentVars[21] == true then
+            return
         end
-        for _, value in ipairs(listOfAllThirdRomance) do
-            if value[1] == dialog then
-    
-                    print(uuid, " line 185")
-                    StashPartneredStatus(true, uuid)
-                -- end
-                break
+
+        DPrint(string.format("DialogStarted %s, %s", dialog, instanceid))
+
+        if isInList(dialog, listOfAllFirstSecondRomance) then
+                StashPartneredStatus(true, uuid)
+                ClearPartnerships({}, uuid)
+                FixAfterFlagToggling(uuid)
+        elseif dialog == halsinCompanionDialog then
+                StashPartneredStatus(true, uuid)
+        else
+            for _, value in ipairs(listOfAllFirstSecondRomance) do
+                if value[1] == dialog then
+        
+                        StashPartneredStatus(true, uuid)
+                        ClearPartnerships({}, uuid)
+                        FixAfterFlagToggling(uuid)
+                end
             end
-        end
-        for _, value in ipairs(listMainCompanionDialogEntry) do
-            if value[1] == dialog then
-                --for index, uuid in ipairs(PlayerStash) do
-                    StashPartneredStatus(true, uuid)
-                    ClearPartnerships({eHalsin, value[2]}, uuid)
-                    ClearDatingExceptHalsin(value[2], uuid)
-                    FixAfterFlagToggling(uuid)
-                --end
-                break
+            for _, value in ipairs(listOfAllThirdRomance) do
+                if value[1] == dialog then
+                        StashPartneredStatus(true, uuid)
+                    break
+                end
+            end
+            for _, value in ipairs(listMainCompanionDialogEntry) do
+                if value[1] == dialog then
+                        StashPartneredStatus(true, uuid)
+                        ClearPartnerships({eHalsin, value[2]}, uuid)
+                        ClearDatingExceptHalsin(value[2], uuid)
+                        FixAfterFlagToggling(uuid)
+                    break
+                end
             end
         end
     end
-    
 end)
 
 Ext.Osiris.RegisterListener("DialogEnded", 2, "after", function(dialog, instanceid)
     -- EVULBAD ADDITION
-    local uuid = GetPlayerInDialog(instanceid, PlayerStash)
+    local uuid = GetPlayerInDialog(instanceid)
+    local playerIgnore = IsIgnoredPlayer(uuid)
     -- EVULBAD ADDITION
 
-    if PersistentVars[21] == true then
-        return
-    end
-
-    DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
-        MinthyFixNew(uuid) -- bug in se causes flags to be weird when set in dialog directly?
-        FixPartneredDBAndFlags(uuid)
-
-    if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
-            RestorePartneredStatus({}, uuid)
-            FixAfterFlagToggling(uuid)
-    elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
-        -- Wyll breaks up with avatar is Duke is dead
-        for index, uuid in ipairs(PlayerStash) do
-            StashPartneredStatus(false, uuid)
-        end
-    elseif dialog == halsinCompanionDialog then 
-            RestorePartneredStatus(eHalsin, uuid)
-            FixAfterFlagToggling(uuid)
+    if playerIgnore or uuid == nil then
+        DPrint(string.format("'%s' in ignore list or nil. Skipping...", uuid))
     else
-        for _, value in ipairs(listOfAllFirstSecondRomance) do
-            if value[1] == dialog then
-                RestorePartneredStatus(value[2], uuid)
-                RestoreDating(value[2], uuid)
-                FixAfterFlagToggling(uuid)
-                break
-            end
+        if PersistentVars[21] == true then
+            return
         end
-        for _, value in ipairs(listOfAllThirdRomance) do
-            if value[1] == dialog then
-                RestorePartneredStatus(value[2], uuid)
-                FixAfterFlagToggling(uuid)
-                break
-            end
-        end
-        for _, value in ipairs(listMainCompanionDialogEntry) do
-            if value[1] == dialog then
-                DPrint(value[1])
-                RestorePartneredStatus(value[2], uuid)
-                RestoreDating(value[2], uuid)
-                FixAfterFlagToggling(uuid)
-                DPrintAll()
-                break
-            end
-        end
-    end
 
-    StashPartneredStatus(false, uuid)
+        DPrint(string.format("DialogEnded %s, %s", dialog, instanceid))
+            MinthyFixNew(uuid) -- bug in se causes flags to be weird when set in dialog directly?
+            FixPartneredDBAndFlags(uuid)
+
+        if dialog == "CAMP_MizoraMorningAfter_CFM_ROM_69ddc432-0293-98b1-e512-baff8b160f12" then
+                RestorePartneredStatus({}, uuid)
+                FixAfterFlagToggling(uuid)
+        elseif dialog == "CAMP_Wyll_CRD_Act3Romance_599fe884-f39f-a3b5-7a86-ca239e016a05" then
+            -- Wyll breaks up with avatar is Duke is dead
+            for index, uuid in ipairs(PlayerStash) do
+                StashPartneredStatus(false, uuid)
+            end
+        elseif dialog == halsinCompanionDialog then 
+                RestorePartneredStatus(eHalsin, uuid)
+                FixAfterFlagToggling(uuid)
+        else
+            for _, value in ipairs(listOfAllFirstSecondRomance) do
+                if value[1] == dialog then
+                    RestorePartneredStatus(value[2], uuid)
+                    RestoreDating(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                    break
+                end
+            end
+            for _, value in ipairs(listOfAllThirdRomance) do
+                if value[1] == dialog then
+                    RestorePartneredStatus(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                    break
+                end
+            end
+            for _, value in ipairs(listMainCompanionDialogEntry) do
+                if value[1] == dialog then
+                    DPrint(value[1])
+                    RestorePartneredStatus(value[2], uuid)
+                    RestoreDating(value[2], uuid)
+                    FixAfterFlagToggling(uuid)
+                    DPrintAll()
+                    break
+                end
+            end
+        end
+
+        StashPartneredStatus(false, uuid)
+    end
 
 end)
 
@@ -267,16 +269,10 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 0, "after", function ()
     flagStashIndex = 1
     for index, uuid in ipairs(PlayerStash) do
         print(index, uuid)
-        playerIgnore = false
-
-        for index, value in ipairs(IgnorePlayerList) do
-            if value == uuid then
-                playerIgnore = true
-            end
-        end
+        local playerIgnore = IsIgnoredPlayer(uuid)
 
         if playerIgnore then
-            print("player in ignore list. skipping")
+            DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
         else
             tableIndex = 1
             for i, val in ipairs(origin_names) do
@@ -395,13 +391,28 @@ end)
 -- this is when you start long rest
 Ext.Osiris.RegisterListener("RequestEndTheDaySuccess", 0, "before", function () 
     DPrint("RequestEndTheDaySuccess")
+
     for index, uuid in ipairs(PlayerStash) do
-        RestorePartneredStatus({}, uuid)
-        restoreStableRelationship(uuid)
+        local playerIgnore = IsIgnoredPlayer(uuid)
+
+        if playerIgnore == true then
+            DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+        else
+            RestorePartneredStatus({}, uuid)
+            restoreStableRelationship(uuid)
+        end
     end
+
     Fix_Databases() -- once per game
+
     for index, uuid in ipairs(PlayerStash) do
-        FixAll(uuid)
+        local playerIgnore = IsIgnoredPlayer(uuid)
+
+        if playerIgnore == true then
+            DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+        else
+            FixAll(uuid)
+        end
     end
 end)
 
@@ -419,12 +430,24 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
 
     if flag == "ORI_State_DatingMinthara_de1360cd-894b-40ea-95a7-1166d675d040" then
         for index, uuid in ipairs(PlayerStash) do
-            MinthyFixNew(uuid)
+            local playerIgnore = IsIgnoredPlayer(uuid)
+
+            if playerIgnore == true then
+                DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+            else
+                MinthyFixNew(uuid)
+            end
         end
     end
     if #Osi.DB_Avatars:Get(nil) > 0 then
         for index, uuid in ipairs(PlayerStash) do
-            FixPartneredDBAndFlags(uuid)
+            local playerIgnore = IsIgnoredPlayer(uuid)
+
+            if playerIgnore == true then
+                DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+            else
+                FixPartneredDBAndFlags(uuid)
+            end
         end
     end
 end)
@@ -470,7 +493,13 @@ end)
 Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(object, timer)
     if timer == 'NoRomanceLimitEpilogFix' then
         for index, uuid in ipairs(PlayerStash) do
-            EpilogFix(uuid)
+            local playerIgnore = IsIgnoredPlayer(uuid)
+
+            if playerIgnore == true then
+                DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+            else
+                EpilogFix(uuid)
+            end
         end
         print("Romance states restored to:")
         PrintAll()
@@ -486,11 +515,17 @@ Ext.Osiris.RegisterListener("FlagSet", 3, "after", function(flag, speaker, dialo
     if flag == "CAMP_Halsin_CRD_Romance_CheckWithExistingPartner_b523a2ba-8abf-4116-a5c1-636c77920ca3" then
         Osi.DB_CampNight_Requirement:Delete("NIGHT_Halsin_Romance_Execution_a9634ef4-27ec-4a75-be9d-7c738d9768ed", nil)
         for index, uuid in ipairs(PlayerStash) do
-            Osi.SetFlag(partner_flags[eHalsin], uuid)
+            local playerIgnore = IsIgnoredPlayer(uuid)
+
+            if playerIgnore == true then
+                DPrint(string.format("%s in ignore list or nil. Skipping...", uuid))
+            else
+                Osi.SetFlag(partner_flags[eHalsin], uuid)
+            end
         end
     end
 
 end)
 
-print("NoRomanceLimit Mod V9.10.EB loaded!")
-print("Please report unexpected behavior to EVULBAD since you are playing his edited version of this mod. :3\nnexusmods.com/baldursgate3/mods/1529?tab=posts is a good place to go if the bugs are a result of the base mod, though.")
+print("NoRomanceLimit Mod V9.10.MP loaded!")
+print("Please report unexpected behavior to: nexusmods.com/baldursgate3/mods/1529?tab=posts")

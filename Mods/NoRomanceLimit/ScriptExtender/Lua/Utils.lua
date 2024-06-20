@@ -82,15 +82,32 @@ function GetSquad()
     return squad
 end
 
+-- returns true is uuid is in IgnorePlayerList.
+function IsIgnoredPlayer(uuid)
+    playerIgnore = false
+
+    for index, value in ipairs(IgnorePlayerList) do
+        if value == uuid then
+            playerIgnore = true
+        end
+    end
+
+    return playerIgnore
+end
+
 -- for parsing a substring in GetPlayerInDialog.
-function escape_pattern(pattern)
+function EscapePattern(pattern)
+    if pattern == nil then
+        return GetHostCharacter()
+    end
+
     return pattern:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 end
 
 -- the "Osi.DialogGetInvolvedPlayer(instanceid, 2)" function returns the uuid without the part with the text player description. this remedies that.
 function GetPlayerInDialog(instanceid)
     local substring = Osi.DialogGetInvolvedPlayer(instanceid, 2)
-    local escapedSubstring = escape_pattern(substring)
+    local escapedSubstring = EscapePattern(substring)
 
     for index, value in ipairs(PlayerStash) do
         if string.find(value, escapedSubstring) ~= null then
@@ -101,9 +118,19 @@ end
 
 -- for retrieving flag stashes.
 function GetFlagStash(uuid)
-    for _, entry in ipairs(flagStashList) do
-        if entry[1] == uuid then
-            return entry[2]
+    playerIgnore = false
+
+    for index, value in ipairs(IgnorePlayerList) do
+        if value == uuid then
+            playerIgnore = true
+        end
+    end
+
+    if playerIgnore == false then
+        for _, entry in ipairs(flagStashList) do
+            if entry[1] == uuid then
+                return entry[2]
+            end
         end
     end
 end
